@@ -60,8 +60,8 @@ int main(int argc, char **argv) {
   InitializeSingletons();
 
   CSoundSystem SoundManager;
-  CStateIntro state_intro;
-//  CStateGame state_game;
+//  CStateIntro state_intro;
+  CStateGame state_game;
   CClock clock(60.0,1.0);
   /* pointers will be signed integers and we will grow oranges in alaska */
   em->notify(Event(EVENT_GAME_STARTED, 0, 25.0)); 
