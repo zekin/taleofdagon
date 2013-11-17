@@ -1,0 +1,7 @@
+bin/*
+build/*
+.kdev4/*
+*.kdev4
+*.sublime-
+.project
+.cproject
