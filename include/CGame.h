@@ -21,7 +21,7 @@ public:
   }
   void add(IState* state) {
     if (state) {
-      std::clog << "Added State ID " << state->ID << std::endl;
+//      std::clog << "Added State ID " << state->ID << std::endl;
       state_list.push_back(state);
     }
     std::clog << "Could not add state to game" << std::endl;

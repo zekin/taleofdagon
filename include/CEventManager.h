@@ -17,37 +17,41 @@ struct Event {
   float q,r,s,x,y,z;
 };
 class IEventable {
-protected:
+private:
   unsigned int ID;
-public:
-IEventable() {
-  ID=GlobalID;
-  GlobalID++;
-}
-virtual void notify(Event*)=0;
-unsigned int getID() {
-  return ID;
-}
+  public:
+  IEventable() {
+    ID=GlobalID;
+    GlobalID++;
+  }
+  virtual void notify(Event*)=0;
+  unsigned int getID() {
+    return ID;
+  }
 };
 class CEventManager {
 private:
   std::vector<IEventable*> notify_list;
+  
 public:
   CEventManager() {
     std::clog << "EventManager been created" << std::endl;
   }
-  ~CEventManager() {
-  }
+  
+  ~CEventManager() {}
+  
   void notify(Event e) {
 //    std::clog << "notified that:" << e.type << " happened" << std::endl;
     for(int i=0; i<notify_list.size(); i++) {
       notify_list[i]->notify(&e);
     }
   }
+  
   void subscribe(int EventType,IEventable* eventable) {
     std::clog << "ID " << eventable->getID() << " listening to events(" << EventType << ")" << std::endl;
     notify_list.push_back(eventable);
   }
+  
   static CEventManager* getInstance() {
     static CEventManager* instance=0;
     if (instance==0) {
@@ -55,5 +59,6 @@ public:
     }
     return instance;
   }
+  
 };
 #endif
