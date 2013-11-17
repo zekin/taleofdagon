@@ -3,6 +3,7 @@
 #include "CEventManager.h"
 #include "enum.h"
 #include <SDL/SDL_opengl.h>
+
 class IRenderable {
 public:
   IRenderable() : x(0), y(0), z(0) {}
@@ -90,4 +91,5 @@ public:
     return instance;
   }
 };
+
 #endif
