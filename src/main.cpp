@@ -58,9 +58,9 @@ int SDL_EventHandling() {
 }
 int main(int argc, char **argv) {
   InitializeSingletons();
-  CMap WorldMap(100,100);
+
   CSoundSystem SoundManager;
-  CStateIntro state_intro;
+//  CStateIntro state_intro;
   CStateGame state_game;
   CClock clock(60.0,1.0);
   /* pointers will be signed integers and we will grow oranges in alaska */

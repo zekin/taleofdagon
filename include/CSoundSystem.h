@@ -26,16 +26,16 @@ public:
     forest=Mix_LoadMUS("./music/forest.ogg");
     combat1=Mix_LoadMUS("./music/combat1.ogg");
     if (intro==0) {
-      std::clog << "Error in loading music" << Mix_GetError() << std::endl;
+      std::clog << "Error in loading music : " << Mix_GetError() << std::endl;
     }
     if (desert==0) {
-      std::clog << "Error in loading music" << Mix_GetError() << std::endl;
+      std::clog << "Error in loading music : " << Mix_GetError() << std::endl;
     }
     if (forest==0) {
-      std::clog << "Error in loading music" << Mix_GetError() << std::endl;
+      std::clog << "Error in loading music : " << Mix_GetError() << std::endl;
     }
     if (combat1==0) {
-      std::clog << "Error in loading music" << Mix_GetError() << std::endl;
+      std::clog << "Error in loading music : " << Mix_GetError() << std::endl;
     }
   }
   void play_music(std::string name, Mix_Music* music) {

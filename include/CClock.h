@@ -4,11 +4,13 @@
 #include "CEventManager.h"
 #include <SDL/SDL.h>
 #include "enum.h"
+
 class CClock : public IEventable {
 private:
   float time;
   float fps;
   float speed_scalar;
+  
 public:
   CClock(float fps, float gamespeed) : time(0.0), fps(fps), speed_scalar(gamespeed) {}
   
