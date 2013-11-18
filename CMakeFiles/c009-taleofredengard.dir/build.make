@@ -34,11 +34,14 @@ RM = /usr/bin/cmake -E remove -f
 # Escaping for special characters.
 EQUALS = =
 
+# The program to use to edit the cache.
+CMAKE_EDIT_COMMAND = /usr/bin/ccmake
+
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/zekin/projects/C009-TaleOfRedengard
+CMAKE_SOURCE_DIR = /home/zekin/projects/C009-TaleOfDagon
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/zekin/projects/C009-TaleOfRedengard
+CMAKE_BINARY_DIR = /home/zekin/projects/C009-TaleOfDagon
 
 # Include any dependencies generated for this target.
 include CMakeFiles/c009-taleofredengard.dir/depend.make
@@ -51,17 +54,17 @@ include CMakeFiles/c009-taleofredengard.dir/flags.make
 
 CMakeFiles/c009-taleofredengard.dir/main.o: CMakeFiles/c009-taleofredengard.dir/flags.make
 CMakeFiles/c009-taleofredengard.dir/main.o: main.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/zekin/projects/C009-TaleOfRedengard/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/zekin/projects/C009-TaleOfDagon/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/c009-taleofredengard.dir/main.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/c009-taleofredengard.dir/main.o -c /home/zekin/projects/C009-TaleOfRedengard/main.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/c009-taleofredengard.dir/main.o -c /home/zekin/projects/C009-TaleOfDagon/main.cpp
 
 CMakeFiles/c009-taleofredengard.dir/main.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/c009-taleofredengard.dir/main.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/zekin/projects/C009-TaleOfRedengard/main.cpp > CMakeFiles/c009-taleofredengard.dir/main.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/zekin/projects/C009-TaleOfDagon/main.cpp > CMakeFiles/c009-taleofredengard.dir/main.i
 
 CMakeFiles/c009-taleofredengard.dir/main.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/c009-taleofredengard.dir/main.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/zekin/projects/C009-TaleOfRedengard/main.cpp -o CMakeFiles/c009-taleofredengard.dir/main.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/zekin/projects/C009-TaleOfDagon/main.cpp -o CMakeFiles/c009-taleofredengard.dir/main.s
 
 CMakeFiles/c009-taleofredengard.dir/main.o.requires:
 .PHONY : CMakeFiles/c009-taleofredengard.dir/main.o.requires
@@ -81,16 +84,13 @@ c009__taleofredengard_EXTERNAL_OBJECTS =
 
 c009-taleofredengard: CMakeFiles/c009-taleofredengard.dir/main.o
 c009-taleofredengard: CMakeFiles/c009-taleofredengard.dir/build.make
-c009-taleofredengard: /usr/lib/i386-linux-gnu/libSDLmain.a
-c009-taleofredengard: /usr/lib/i386-linux-gnu/libSDL.so
-c009-taleofredengard: /usr/lib/i386-linux-gnu/libSDL_mixer.so
-c009-taleofredengard: /usr/lib/i386-linux-gnu/libSDL_image.so
-c009-taleofredengard: /usr/lib/i386-linux-gnu/libGLU.so
-c009-taleofredengard: /usr/lib/i386-linux-gnu/libGL.so
-c009-taleofredengard: /usr/lib/i386-linux-gnu/libSM.so
-c009-taleofredengard: /usr/lib/i386-linux-gnu/libICE.so
-c009-taleofredengard: /usr/lib/i386-linux-gnu/libX11.so
-c009-taleofredengard: /usr/lib/i386-linux-gnu/libXext.so
+c009-taleofredengard: /usr/lib64/libSDL.so
+c009-taleofredengard: /usr/lib64/libSDL_mixer.so
+c009-taleofredengard: /usr/lib64/libSDL_image.so
+c009-taleofredengard: /usr/lib64/libGLU.so
+c009-taleofredengard: /usr/lib64/libGL.so
+c009-taleofredengard: /usr/lib64/libX11.so
+c009-taleofredengard: /usr/lib64/libXext.so
 c009-taleofredengard: CMakeFiles/c009-taleofredengard.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable c009-taleofredengard"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/c009-taleofredengard.dir/link.txt --verbose=$(VERBOSE)
@@ -107,6 +107,6 @@ CMakeFiles/c009-taleofredengard.dir/clean:
 .PHONY : CMakeFiles/c009-taleofredengard.dir/clean
 
 CMakeFiles/c009-taleofredengard.dir/depend:
-	cd /home/zekin/projects/C009-TaleOfRedengard && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/zekin/projects/C009-TaleOfRedengard /home/zekin/projects/C009-TaleOfRedengard /home/zekin/projects/C009-TaleOfRedengard /home/zekin/projects/C009-TaleOfRedengard /home/zekin/projects/C009-TaleOfRedengard/CMakeFiles/c009-taleofredengard.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/zekin/projects/C009-TaleOfDagon && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/zekin/projects/C009-TaleOfDagon /home/zekin/projects/C009-TaleOfDagon /home/zekin/projects/C009-TaleOfDagon /home/zekin/projects/C009-TaleOfDagon /home/zekin/projects/C009-TaleOfDagon/CMakeFiles/c009-taleofredengard.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/c009-taleofredengard.dir/depend
 

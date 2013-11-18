@@ -20,7 +20,7 @@ public:
   IResource() {}
   IResource(std::string path) : path(path) {}
   virtual ~IResource() {}
-  virtual bool load(std::string path) {}
+  virtual void load(std::string path) {}
 };
 
 class CSpriteSheet : public IResource {
@@ -31,9 +31,13 @@ protected:
   int cell_height;
 public:
   CSpriteSheet() {}
+  CSpriteSheet(std::string path) : IResource(path) {
+    load(true);
+    loadTexture();
+  }
   CSpriteSheet(std::string path, int cell_width, int cell_height) : IResource(path), cell_width(cell_width), cell_height(cell_height), surface(0) 
   {
-    load();
+    load(false);
     loadTexture();
   }
   virtual ~CSpriteSheet() {
@@ -41,14 +45,22 @@ public:
     if (surface)
       delete surface;
   }
-  virtual bool load() {
+  virtual void load(bool use_full_image) {
     surface=IMG_Load(path.c_str());
-    if (surface)
+    if (surface) {
       std::clog << "Loaded " << path << std::endl;
-    else
+    } else {
       std::cerr << "Error: could not load image at path " << path << std::endl;
-    if ((surface->w/cell_width*surface->h/cell_height)>0)
-      sheet_texture_id=new unsigned int[surface->w/cell_width * surface->h/cell_height];
+    }
+    if (!use_full_image) {
+      if ((surface->w/cell_width*surface->h/cell_height)>0) {
+        sheet_texture_id=new unsigned int[surface->w/cell_width*surface->h/cell_height];
+      }
+    } else {
+      sheet_texture_id=new unsigned int[1];
+      cell_width=surface->w;
+      cell_height=surface->h;
+    }
   }
   SDL_Rect getFrameSDL(int i) {
     if (cell_width > surface->w) {
@@ -124,6 +136,7 @@ public:
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
       SDL_Surface* temp_surface=SDL_CreateRGBSurface(0,cell_width,cell_height,32,0xFF,0xFF00,0xFF0000,0xFF000000);
+      SDL_SetAlpha(surface,0,SDL_SRCALPHA);
       SDL_Rect r1=getFrameSDL(i);
       SDL_BlitSurface(surface, &r1, temp_surface, 0);
       gluBuild2DMipmaps(GL_TEXTURE_2D,GL_RGBA,temp_surface->w,temp_surface->h,GL_RGBA,GL_UNSIGNED_BYTE,temp_surface->pixels);
@@ -163,7 +176,7 @@ public:
     if (surface)
       delete surface;
   }
-  virtual bool load() {
+  virtual void load() {
     surface=IMG_Load(path.c_str());
     if (surface==0)
       std::cerr << "Error: could not load image at path " << path << std::endl;
@@ -253,7 +266,6 @@ public:
       SDL_Surface* temp_surface=SDL_CreateRGBSurface(0,cell_width*2,cell_height*2,32,s->format->Rmask,s->format->Gmask,s->format->Bmask,s->format->Amask);
       for (int j=0; j<cell_width*cell_height*4; j++) {
        ((unsigned int*)temp_surface->pixels)[j] = ((unsigned int*)s->pixels)[j]&0xFF000000;
-//      ((unsigned int*)temp_surface->pixels)[j] |= ((unsigned int*)surface->pixels)[surface->w*(j/16)+(j%16)+16*i]&0xFFFFFF;
       }
       SDL_Rect r1=getFrameSDL(i);
       SDL_Rect r2={0,0,cell_width,cell_height};

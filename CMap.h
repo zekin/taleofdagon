@@ -210,6 +210,7 @@ public:
     static float lastAnimTime=0;
     static int index=0;
     const float delay=0.25;
+    glEnable(GL_BLEND);    
     if (time>lastAnimTime+delay) {
       index=(index+1)%4;
       lastAnimTime=time;
@@ -218,11 +219,11 @@ public:
     XY pos_frac=CCamera::getInstance()->getXY();
     pos_frac.x=pos.x-(round(pos.x));     
     pos_frac.y=pos.y-(round(pos.y));
-    glTranslatef(-(30+pos_frac.x),-(30+pos_frac.y),0);
+    glTranslatef(-(130+pos_frac.x),-(130+pos_frac.y),0);
       /* render tiles */
-    for (int i=round(pos.y)-30; i<=round(pos.y)+30; i++) {
+    for (int i=round(pos.y)-130; i<=round(pos.y)+130; i++) {
       glPushMatrix();
-      for (int j=round(pos.x)-30; j<=round(pos.x)+30; j++) {
+      for (int j=round(pos.x)-130; j<=round(pos.x)+130; j++) {
         Tile* current=at(j,i);
         if (!current) {
         }

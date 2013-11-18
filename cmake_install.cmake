@@ -1,4 +1,4 @@
-# Install script for directory: /home/zekin/projects/C009-TaleOfRedengard
+# Install script for directory: /home/zekin/projects/C009-TaleOfDagon
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -29,7 +29,7 @@ ENDIF(NOT CMAKE_INSTALL_COMPONENT)
 
 # Install shared libraries without execute permission?
 IF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
-  SET(CMAKE_INSTALL_SO_NO_EXE "1")
+  SET(CMAKE_INSTALL_SO_NO_EXE "0")
 ENDIF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -39,7 +39,7 @@ IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/c009-taleofredengard"
          RPATH "")
   ENDIF()
-  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/home/zekin/projects/C009-TaleOfRedengard/c009-taleofredengard")
+  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/home/zekin/projects/C009-TaleOfDagon/c009-taleofredengard")
   IF(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/c009-taleofredengard" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/c009-taleofredengard")
     IF(CMAKE_INSTALL_DO_STRIP)
@@ -54,7 +54,7 @@ ELSE(CMAKE_INSTALL_COMPONENT)
   SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 ENDIF(CMAKE_INSTALL_COMPONENT)
 
-FILE(WRITE "/home/zekin/projects/C009-TaleOfRedengard/${CMAKE_INSTALL_MANIFEST}" "")
+FILE(WRITE "/home/zekin/projects/C009-TaleOfDagon/${CMAKE_INSTALL_MANIFEST}" "")
 FOREACH(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  FILE(APPEND "/home/zekin/projects/C009-TaleOfRedengard/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  FILE(APPEND "/home/zekin/projects/C009-TaleOfDagon/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 ENDFOREACH(file)

@@ -26,7 +26,7 @@ private:
 public:
   CCamera() : camera_target(0) { 
     for (int i=0; i<4; i++) { moving[i]=0; }
-    camera_target_default=CCameraTarget(0,0,0);
+    camera_target_default=CCameraTarget(0,0,-10);
     CEventManager::getInstance()->subscribe(0,this);
   }
   void setTarget(IRenderable* target) {
@@ -52,6 +52,11 @@ public:
     return XY((double)camera_target_default.x, (double)camera_target_default.y);
   }
   void setupCamera() {
+   glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+//  glOrtho(-5.0,5.0,-5.0,5.0,-100,100);
+  gluPerspective(45.0,640.0/480.0,0.1,100);
+  glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 //    glRotatef(-45,0,1,1);
     glRotatef(-45,1,0,0);
@@ -70,12 +75,14 @@ public:
     } else if (e->type==EVENT_CAMERA_MOVE_START) {
       if (0 <= e->a && e->a <= 3) {
         moving[e->a]=true;
+        std::cerr << "Moving" << std::endl;
       } else {
         std::cerr << "Error: Incorrect camera start move direction received" << std::endl;
       }
     } else if (e->type==EVENT_CAMERA_MOVE_END) {
       if (0 <= e->a && e->a <= 3) {
         moving[e->a]=false;
+        std::cerr << "Not Moving" << std::endl;
       } else {
         std::cerr << "Error: Incorrect camera end move direction received" << std::endl;
       }

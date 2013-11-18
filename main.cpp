@@ -60,13 +60,13 @@ int main(int argc, char **argv) {
   InitializeSingletons();
 
   CSoundSystem SoundManager;
-//  CStateIntro state_intro;
-  CStateGame state_game;
+  CStateIntro state_intro;
+//  CStateGame state_game;
   CClock clock(60.0,1.0);
   /* pointers will be signed integers and we will grow oranges in alaska */
-  em->notify(Event(EVENT_GAME_STARTED, 0, 25.0)); 
+  em->notify(Event(EVENT_GAME_STARTED, (long)screen, 25.0)); 
   em->notify(Event(EVENT_SWITCH_STATES, STATE_INTRO));
-  cam->setTarget(50.0,50.0,0.0);
+  cam->setTarget(50.0,50.0,-0.0);
   while(SDL_EventHandling()) {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     cam->setupCamera();
