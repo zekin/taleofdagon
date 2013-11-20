@@ -64,6 +64,19 @@ public:
         case MUSIC_CREDITS:     play_music("Credits", credits);          break;
         default:
           std::clog << "Incorrect music number received, not playing anything" << std::endl;
+          break;
+      }
+    } else if (e->type==EVENT_PLAY_SOUND) {
+      switch(e->a) {
+        case SOUND_UI_CLICK:
+          std::clog << "Uhhh... CLICK." << std::endl;
+          break;
+        case SOUND_UI_SELECT:
+          std::clog << "VOOP" << std::endl;
+          break;
+        default:
+          std::clog << "Told to play a sound, didn't know which" << std::endl;
+          break;
       }
     }
   }

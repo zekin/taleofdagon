@@ -6,12 +6,8 @@
 #include <SDL/SDL_opengl.h>
 #include "enum.h"
 #include <iomanip>
+#include <vector>
 
-enum {
-  RESOURCE_IMAGE,
-  RESOURCE_MUSIC,
-  RESOURCE_SOUND
-};
 class IResource {
 protected:
   int type;
@@ -44,6 +40,9 @@ public:
     delete[] sheet_texture_id;
     if (surface)
       delete surface;
+  }
+  std::string getPath() {
+    return path;
   }
   virtual void load(bool use_full_image) {
     surface=IMG_Load(path.c_str());
@@ -185,6 +184,9 @@ public:
     if ((surface->w/cell_width*surface->h/cell_height)>0)
       sheet_texture_id=new unsigned int[surface->w/cell_width * surface->h/cell_height];
   }
+  std::string getPath() {
+    return path;
+  }
   SDL_Rect getFrameSDL(int i) {
     if (cell_width > surface->w) {
       std::cerr << "Error: Width of frame is bigger than cell width, using image dimensions" << std::endl;
@@ -285,6 +287,56 @@ public:
   unsigned int getTextureID(int num) {
     return sheet_texture_id[num];
   }
+  
+};
+
+class CResourceManager {
+private:
+  std::vector<CSpriteSheet*> sprite_sheets;
+  std::vector<CMapSheet*> map_sheets;
+public:
+  CResourceManager() {
+  }
+  //This function attempts to get a resource, if it fails it attempts to load it with the properties specified.
+  CSpriteSheet* getSpriteSheet(std::string path) {
+    for (int i=0; i<sprite_sheets.size(); i++) {
+      if (sprite_sheets[i]->getPath() == path) {
+        return sprite_sheets[i];
+      }
+    }
+    CSpriteSheet* new_sheet=new CSpriteSheet(path);
+    sprite_sheets.push_back(new_sheet);
+    return new_sheet;
+    
+  }
+  CSpriteSheet* getSpriteSheet(std::string path, int cell_width, int cell_height) {
+    for (int i=0; i<sprite_sheets.size(); i++) {
+      if (sprite_sheets[i]->getPath() == path) {
+        return sprite_sheets[i];
+      }
+    }
+    CSpriteSheet* new_sheet=new CSpriteSheet(path,cell_width,cell_height);
+    sprite_sheets.push_back(new_sheet);
+    return new_sheet;
+  } 
+  CMapSheet* getMapSheet(std::string path) {
+    for (int i=0; i<map_sheets.size(); i++) {
+      if (map_sheets[i]->getPath() == path) {
+        return map_sheets[i];
+      }
+    }
+//    CMapSheet* new_sheet=new CMapSheet(path);
+    return 0;
+  }
+  
+  static CResourceManager* getInstance() {
+    CResourceManager* instance=0;
+    if (instance==0) {
+      instance=new CResourceManager();
+    }
+    return instance;
+  }
+  
   
 };
 #endif

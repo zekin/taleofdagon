@@ -21,10 +21,10 @@ public:
       CEventManager::getInstance()->notify(Event(EVENT_PLAY_MUSIC,MUSIC_INTRO));
     }
     if (e->type == EVENT_KEYPRESS_DOWN) {
-//      if (e->a=='w')
-//        CEventManager::getInstance()->notify(Event(EVENT_CAMERA_MOVE_START, DIRECTION_NORTH));
-//      if (e->a=='s')
-//        CEventManager::getInstance()->notify(Event(EVENT_CAMERA_MOVE_START, DIRECTION_SOUTH));
+      if (e->a=='w')
+        CEventManager::getInstance()->notify(Event(EVENT_CAMERA_MOVE_START, DIRECTION_NORTH));
+      if (e->a=='s')
+        CEventManager::getInstance()->notify(Event(EVENT_CAMERA_MOVE_START, DIRECTION_SOUTH));
     }
     if (e->type == EVENT_RENDER_FRAME) {
       
