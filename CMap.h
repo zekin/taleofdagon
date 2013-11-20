@@ -63,7 +63,8 @@ public:
   CMap(int width, int height) : width(width), height(height), map_tiles_surface(0), map_tiles_resource(0) { 
     CEventManager::getInstance()->subscribe(1,this);
     /* load image for tiles */
-    map_tiles_resource = new CMapSheet("./graphics/tile3.png",16,16);
+    map_tiles_resource=CResourceManager::getInstance()->getMapSheet("./graphics/tile3.png",16,16);
+//    map_tiles_resource = new CMapSheet("./graphics/tile3.png",16,16);
   } 
   Tile* at(int x, int y) {
     if (x<0) {
@@ -278,4 +279,7 @@ public:
   }
 };
 
+class CMapDemo : public CMap {
+  
+};
 #endif

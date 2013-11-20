@@ -21,13 +21,14 @@ protected:
   float w;
   float h;
   UI_TYPE uitype;
+public:
+  
   void setUIType(UI_TYPE type) {
     uitype=type;
   }
   UI_TYPE getUIType() {
     return uitype;
   }
-public:
   IWidget(float x, float y, float w, float h) : x(x), y(y), w(w), h(h), parent(0), uitype(UI_TYPE_LABEL) { }
   IWidget(float x, float y, float w, float h, IWidget* parent) : x(x), y(y), w(w), h(h), parent(parent), uitype(UI_TYPE_LABEL) { }
   virtual void render()=0;
@@ -106,25 +107,28 @@ public:
   virtual void render() {
     if (panel_texture==NULL) 
       return;
-    if (selected)
-      renderQuad(panel_texture->getTextureID(TEXTURE_BUTTON_SELECTED));     
-    else if (pressed)
+    if (pressed)
       renderQuad(panel_texture->getTextureID(TEXTURE_BUTTON_PRESSED));
+    else if (selected)
+      renderQuad(panel_texture->getTextureID(TEXTURE_BUTTON_SELECTED));     
     else 
       renderQuad(panel_texture->getTextureID(TEXTURE_BUTTON_NOT_SELECTED));
   }
   virtual void press()=0; 
   virtual void notify(Event* e) {
     if (e->type==EVENT_BUTTON_PRESSED_DOWN) {
-      pressed=true;
+      if (e->a==(long)this)
+        pressed=true;
     }
     else if (e->type==EVENT_BUTTON_PRESSED_RELEASE) {
-      press();
-      pressed=false;
+      if (e->a==(long)this) {
+        press();
+        pressed=false;
+      }
     }
     else if (e->type==EVENT_BUTTON_SELECTED) {
       if ((void*)e->a==this) {
-        CEventManager::getInstance()->notify(Event(EVENT_PLAY_SOUND,0));
+        CEventManager::getInstance()->notify(Event(EVENT_PLAY_SOUND,(long)((const char*)&SOUND_UI_SELECT)));
         selected=true;
       }
       else {
@@ -139,7 +143,6 @@ public:
     panel_texture=CResourceManager::getInstance()->getSpriteSheet("./graphics/ui/ui_mainmenu_start.png", 64, 16);
   }
   virtual void press() {
-    CEventManager::getInstance()->notify(Event(EVENT_GAME_STARTED));
   }
 };
 class CButtonOptions : public CButton {
@@ -148,7 +151,6 @@ public:
     panel_texture=CResourceManager::getInstance()->getSpriteSheet("./graphics/ui/ui_mainmenu_options.png", 64, 16);
   }
   virtual void press() {
-    CEventManager::getInstance()->notify(Event(EVENT_GAME_STARTED));
   }
 };
 class CButtonExitGame : public CButton {
@@ -157,7 +159,6 @@ public:
     panel_texture=CResourceManager::getInstance()->getSpriteSheet("./graphics/ui/ui_mainmenu_exit.png", 64, 16);
   }
   virtual void press() {
-    CEventManager::getInstance()->notify(Event(EVENT_GAME_STARTED));
   }
 };
 class CGUI : public IWidget {
@@ -165,25 +166,32 @@ protected:
   std::vector<IWidget*> widgets;
   int selected;
 public:
-  CGUI(float x, float y, float gui_width, float gui_height) : IWidget(x,y,gui_width,gui_height) { 
+  CGUI(float x, float y, float gui_width, float gui_height) : IWidget(x,y,gui_width,gui_height), selected(0) { 
   }
   void notify_members(Event e) {
     for (int i=0;i<widgets.size(); i++) {
       widgets[i]->notify(&e);
     }
   }
-  IWidget* getPrevButton() {
-    int i=(selected-1)%widgets.size();
-    
-    if (i<0) {
-      i=widgets.size()-i;
+  int getPrevButton() {
+    int index=selected;
+    for (int i=selected-1; i>=0; i--) {
+      if (widgets[i]->getUIType()==UI_TYPE_BUTTON) {
+        index=i;
+        break;
+      }
     }
-    for (i; i<widgets.size(); i++) {
-    }
+    return index;
   }
-  IWidget* getNextButton() {
-    for (int i=(selected+1)%widgets.size(); i<widgets.size(); i++) {
+  int getNextButton() {
+    int index=selected;
+    for (int i=selected+1; i<widgets.size(); i++) {
+      if (widgets[i]->getUIType()==UI_TYPE_BUTTON) {
+        index=i;
+        break;
+      }
     }
+    return index;
   }
   void add(IWidget* member) {
   }
@@ -221,18 +229,27 @@ public:
     notify_members(Event(EVENT_BUTTON_SELECTED,(long)&btn_start_game));
   }
   virtual void notify(Event* e) {
-    static SDL_Surface* screen=0;
-    if (e->type==EVENT_GAME_STARTED) {
-      screen=(SDL_Surface*)e->a;
-    }
     if (e->type==EVENT_CAMERA_MOVE_START) {
       if (e->a==DIRECTION_NORTH) {
-        notify_members(Event(EVENT_BUTTON_SELECTED,0));
+        if (widgets[getPrevButton()] != widgets[selected]) {
+          notify_members(Event(EVENT_BUTTON_SELECTED,(long)widgets[getPrevButton()]));
+          selected=getPrevButton();
+        }
       }
       if (e->a==DIRECTION_SOUTH) {
+        if (widgets[getNextButton()] != widgets[selected]) {
+          notify_members(Event(EVENT_BUTTON_SELECTED,(long)widgets[getNextButton()]));
+          selected=getNextButton();
+        }
       }
     }
-    if (e->type==EVENT_RENDER_FRAME) {
+    else if (e->type==EVENT_COMMAND_USE_START) {
+      notify_members(Event(EVENT_BUTTON_PRESSED_DOWN,(long)widgets[selected]));
+    }
+    else if (e->type==EVENT_COMMAND_USE_END) {
+      notify_members(Event(EVENT_BUTTON_PRESSED_RELEASE, (long)widgets[selected]));
+    }
+    else if (e->type==EVENT_RENDER_FRAME) {
       CCamera::getInstance()->startGUI();     
       logo.render();
       render();

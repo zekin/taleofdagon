@@ -3,6 +3,7 @@
 #include "CEventManager.h"
 #include "enum.h"
 #include <SDL/SDL_mixer.h>
+#include <map>
 
 class CSoundSystem : public IEventable {
 private:
@@ -16,6 +17,8 @@ private:
   Mix_Music* combat3;
   Mix_Music* final_battle;
   Mix_Music* credits;
+  
+  std::map<const char*, Mix_Chunk*> sound_library;
 public:
   CSoundSystem() : intro(0), town(0), wandering(0), combat1(0), combat2(0), combat3(0), final_battle(0), credits(0) {
     Mix_Init(MIX_INIT_OGG);
@@ -37,6 +40,7 @@ public:
     if (combat1==0) {
       std::clog << "Error in loading music : " << Mix_GetError() << std::endl;
     }
+    sound_library[SOUND_UI_SELECT]=Mix_LoadWAV(SOUND_UI_SELECT);
   }
   void play_music(std::string name, Mix_Music* music) {
     if (music==0) {
@@ -67,17 +71,7 @@ public:
           break;
       }
     } else if (e->type==EVENT_PLAY_SOUND) {
-      switch(e->a) {
-        case SOUND_UI_CLICK:
-          std::clog << "Uhhh... CLICK." << std::endl;
-          break;
-        case SOUND_UI_SELECT:
-          std::clog << "VOOP" << std::endl;
-          break;
-        default:
-          std::clog << "Told to play a sound, didn't know which" << std::endl;
-          break;
-      }
+      if (Mix_PlayChannel(-1, sound_library[(const char*)e->a],0)==-1) {}
     }
   }
 };

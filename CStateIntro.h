@@ -25,6 +25,12 @@ public:
         CEventManager::getInstance()->notify(Event(EVENT_CAMERA_MOVE_START, DIRECTION_NORTH));
       if (e->a=='s')
         CEventManager::getInstance()->notify(Event(EVENT_CAMERA_MOVE_START, DIRECTION_SOUTH));
+      if (e->a=='e')
+        CEventManager::getInstance()->notify(Event(EVENT_COMMAND_USE_START));     
+    }
+    if (e->type == EVENT_KEYPRESS_UP) {
+      if (e->a=='e') 
+        CEventManager::getInstance()->notify(Event(EVENT_COMMAND_USE_END));     
     }
     if (e->type == EVENT_RENDER_FRAME) {
       

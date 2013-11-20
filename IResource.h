@@ -319,15 +319,17 @@ public:
     sprite_sheets.push_back(new_sheet);
     return new_sheet;
   } 
-  CMapSheet* getMapSheet(std::string path) {
+  CMapSheet* getMapSheet(std::string path, int cell_width, int cell_height) {
     for (int i=0; i<map_sheets.size(); i++) {
       if (map_sheets[i]->getPath() == path) {
         return map_sheets[i];
       }
     }
-//    CMapSheet* new_sheet=new CMapSheet(path);
-    return 0;
+    CMapSheet* new_sheet=new CMapSheet(path,cell_width,cell_height);
+    map_sheets.push_back(new_sheet);
+    return new_sheet;
   }
+//    CMapSheet* new_sheet=new CMapSheet(path);
   
   static CResourceManager* getInstance() {
     CResourceManager* instance=0;
