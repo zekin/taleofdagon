@@ -1,1 +1,0 @@
-/usr/bin/c++       CMakeFiles/c009-taleofredengard.dir/main.o  -o c009-taleofredengard -rdynamic -lSDL -lpthread -lSDL_mixer -lSDL_image -lGLU -lGL -lX11 -lXext 
