@@ -1,9 +1,11 @@
-project(c009-taleofredengard)
+project(taleofdagon)
 find_package(OpenGL)
 find_package(SDL)
 find_package(SDL_mixer)
 find_package(SDL_image)
-add_executable(c009-taleofredengard main.cpp)
-install(TARGETS c009-taleofredengard RUNTIME DESTINATION bin)
+find_package(Log4cpp)
+add_executable(taleofdagon main.cpp)
+install(TARGETS taleofdagon RUNTIME DESTINATION bin)
 
-target_link_libraries(c009-taleofredengard ${SDL_LIBRARY} ${SDLMIXER_LIBRARY} ${SDLIMAGE_LIBRARY} ${OPENGL_LIBRARY} )
+target_link_libraries(taleofdagon ${SDL_LIBRARY} ${SDLMIXER_LIBRARY} ${SDLIMAGE_LIBRARY} ${OPENGL_LIBRARY} ${LOG4CPP_LIBRARY})
+
