@@ -14,7 +14,6 @@ class CRenderable {
 protected:
   CSpriteSheet* sheet; 
 public:
-  
   int type;
   CRenderable() : x(0), y(0), z(0), type(0), sheet(0) {}
   CRenderable(float x, float y, float z) : x(x), y(y), z(z), type(0), sheet(0) {}

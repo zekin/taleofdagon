@@ -32,12 +32,12 @@ public:
     if (intro==0) {
       ERROR(LOG) << "Error in loading music : " << Mix_GetError();
     }
-    if (desert==0) {
-      ERROR(LOG) << "Error in loading music : " << Mix_GetError();
-    }
-//    if (forest==0) {
-//      std::clog << "Error in loading music : " << Mix_GetError() << std::endl;
+//    if (desert==0) {
+//      ERROR(LOG) << "Error in loading music : " << Mix_GetError();
 //    }
+    if (forest==0) {
+      std::clog << "Error in loading music : " << Mix_GetError() << std::endl;
+    }
 //    if (combat1==0) {
 //      std::clog << "Error in loading music : " << Mix_GetError() << std::endl;
 //    }

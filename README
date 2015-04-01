@@ -1,3 +1,7 @@
 Tale of Dagon
 -------------
-
+* Get game working over git
+* Sort polygons in rendering order.
+- Keep list of chunks currently loaded and in area
+  on chunk allocation and deallocation, fix draw order
+  

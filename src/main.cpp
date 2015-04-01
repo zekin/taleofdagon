@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
   } else {
     game.initialize(0);
   }
-  
+
   /* pointers will be signed integers and we will grow oranges in alaska */
 
   while(game.events()) {

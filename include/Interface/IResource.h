@@ -1,5 +1,6 @@
 #ifndef IRESOURCE_H
 #define IRESOURCE_H
+
 #include <string>
 #include <iostream>
 #include <SDL/SDL_image.h>
@@ -192,7 +193,7 @@ public:
     if (surface==0)
       ERROR(LOG) << "Error: could not load image at path " << path;
     else
-      ERROR(LOG) << "Loaded " << path;
+      INFO(LOG) << "Loaded " << path;
     if ((surface->w/cell_width*surface->h/cell_height)>0)
       sheet_texture_id=new unsigned int[surface->w/cell_width * surface->h/cell_height];
   }
@@ -414,8 +415,6 @@ public:
     }
     return instance;
   }
-  
-  
 };
 class CFontOutputManager {
 private:
