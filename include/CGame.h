@@ -7,6 +7,8 @@
 #include "CSoundSystem.h"
 #include "CEngine.h"
 #include "logging.h"
+#include "CLocator.h"
+#include "CUnitFactory.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,11 +23,21 @@ private:
   CCamera* camera;
   CClock* clock;
   
-  bool full_screen_enabled;
-
 private:
+  bool full_screen_enabled;
   int width;
   int height;
+
+private: /* Services */
+  CUnitFactory* unitFactory;
+  
+private: /* Helper methods */
+  void initializeServiceLocator() {
+    unitFactory = new CUnitFactory();
+    
+    CLocator::setUnitFactory( (IUnitFactory*) unitFactory );
+  }
+  
 public:
   CGame() :
   em(0),
@@ -85,7 +97,11 @@ public:
     clock=CClock::getInstance();
     em->notify(Event(EVENT_GAME_STARTED, (long)screen, 60.0)); 
     em->notify(Event(EVENT_SWITCH_STATES, STATE_MENU));
+    
+    
+    initializeServiceLocator();
   }
+
   int events() {
     SDL_Event e;
     /* sending messages from the top to the bottom */

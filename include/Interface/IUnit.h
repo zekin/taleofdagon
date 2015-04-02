@@ -1,5 +1,6 @@
 #ifndef IUNIT_H
 #define IUNIT_H
+#include "CRenderable.h"
 enum {
   SKIN_WHITE,
   SKIN_BLACK,
@@ -21,10 +22,11 @@ enum {
 
 
 class IMap;
-class IUnit {
+class IUnit : public CRenderable {
 public:
 
 protected:
+  IUnit(int x, int y, int z) : CRenderable(x,y,z) {}
   float unitPosX;
   float unitPosY;
 protected:

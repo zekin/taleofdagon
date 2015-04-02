@@ -6,6 +6,10 @@
 #include "CRenderable.h"
 #include "CUnit.h"
 #include "CObjectUtil.h"
+#include "IChunk.h"
+#include "IUnitFactory.h"
+#include "CLocator.h"
+
 class CUnit;
 
 class CTile {
@@ -27,7 +31,7 @@ public:
 };
 
 
-class CChunk {
+class CChunk : public IChunk {
 private:
   std::vector<CTile*> tiles;
   std::vector<CRenderable*> objects;
@@ -88,6 +92,7 @@ public:
     }
   }
   void setTiles(int x, int y) {
+    IUnitFactory* unitGenerator=CLocator::getUnitFactory();
     /* a create chunk function */
     int offsetx=x%Globals::chunk_size;
     int offsety=y%Globals::chunk_size;
@@ -97,13 +102,24 @@ public:
 //        if (tile_properties.object_type)
 //          addObject(new CMapObjectRenderable(tile_properties.object_type,j,i,0));
         if ( tile_properties.unit_type ) {
+          CRenderable* unit = NULL;
           /* cheap way of instantiating units for now, i think we should sent off a CREATE_UNIT message and register them with the unit manager */
-//          if (tile_properties.unit_type==UNIT_TYPE_VILLAGER)
-//            addObject(new CUnitVillager(j,i,0));
-//          if (tile_properties.unit_type==UNIT_TYPE_FIGHTER)
-//            addObject(new CUnitFighter(j,i,0));
-//          if (tile_properties.unit_type==UNIT_TYPE_KNIGHT)
-//            addObject(new CUnitKnight(j,i,0));           
+          switch (tile_properties.unit_type) {
+            case UNIT_TYPE_VILLAGER:
+              unit = unitGenerator->createUnit(IUnitFactory::UNIT_VILLAGER,j,i);
+              break;
+            case UNIT_TYPE_KNIGHT:
+              unit = unitGenerator->createUnit(IUnitFactory::UNIT_KNIGHT,j,i);             
+              break;
+            case UNIT_TYPE_FIGHTER:
+              unit = unitGenerator->createUnit(IUnitFactory::UNIT_FIGHTER,j,i);                           
+              break;
+          }
+          
+          if ( unit ) {
+            addObject( unit );
+          }
+
         }
         this->tiles.push_back(new CTile(tile_properties.tile_number,tile_properties.area_type));
       }
