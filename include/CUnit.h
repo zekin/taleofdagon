@@ -11,7 +11,6 @@
 #include "IMap.h"
 #include "IUnit.h"
 
-
 class Armor {
 public:
   int armor_type;
@@ -29,6 +28,7 @@ public:
     armor_value=1;
   }
 };
+
 class ScaleMail : public Armor {
 public:
   ScaleMail() : Armor(XYZ(0.5,0.4,0.6)) {
@@ -68,8 +68,8 @@ protected:
   FrameList* walk[4];
   FrameList* attack[4];
   FrameList* current_animation; //currently playing animation frame list
-  
   CTimer ai_timer;
+  
   
   virtual void init() {
     CResourceManager * resources = CResourceManager::getInstance();
@@ -99,26 +99,42 @@ public:
   float speed;
   int direction;
   virtual void move() {
+    IMap* map = CLocator::getMap();
+    CClock* clock = CClock::getInstance();
+    
+    float desiredMoveY=0;
+    float desiredMoveX=0;   
 	  /* this is a bad move function, this needs a LOT of work, but since units and movement were done completely on monday its ok */
     switch(direction) {
       case DIRECTION_NORTH:
         current_animation=walk[DIRECTION_NORTH];
-        this->y-=CClock::getInstance()->deltaT()*speed;
+        desiredMoveX = this->x;
+        desiredMoveY = this->y - clock->deltaT() * speed;
         break;
       case DIRECTION_EAST:
         current_animation=walk[DIRECTION_EAST];       
-        this->x+=CClock::getInstance()->deltaT()*speed;
+        desiredMoveX = this->x + clock->deltaT() * speed;
+        desiredMoveY = this->y;
         break;
       case DIRECTION_SOUTH:
+        desiredMoveX = this->x + clock->deltaT() * speed;
         current_animation=walk[DIRECTION_SOUTH];              
-        this->y+=CClock::getInstance()->deltaT()*speed;
+        desiredMoveX = this->x;
+        desiredMoveY = this->y + clock->deltaT() * speed;
         break;
       case DIRECTION_WEST:
         current_animation=walk[DIRECTION_WEST];                     
-        this->x-=CClock::getInstance()->deltaT()*speed;
+        desiredMoveX = this->x - clock->deltaT() * speed;
+        desiredMoveY = this->y;
         break;
     }
+    
+    if (map->collide(round(desiredMoveX),round(desiredMoveY)) == false) {
+      this->x = desiredMoveX;
+      this->y = desiredMoveY;
+    }
   }
+  
   virtual void AI() {
     if (ai_timer.finished()==0) {
       return;
@@ -132,6 +148,7 @@ public:
       }
     }
   }
+  
   CUnit(float x, float y, float z) : IUnit(x,y,z),
     //create redder tones for skin
 //    skin_color(0.5+(float)rand()/(RAND_MAX), 0.5+(float)rand()/(RAND_MAX), 0.5+(float)rand()/(RAND_MAX)),
@@ -143,7 +160,7 @@ public:
     ai_state(AI_WALKING),
     speed(0.2),
     direction(DIRECTION_NORTH) {
-     type=RENDERABLE_UNIT; 
+    type=RENDERABLE_UNIT; 
     int skin_type=rand()%5;
     if (skin_type==SKIN_WHITE) {
       skin_color.x=0.9+((float)rand()/RAND_MAX)*0.10;
@@ -171,7 +188,7 @@ public:
     init();
   }
   
-CUnit(float x, float y, float z, XYZ skin_color, XYZ hair_color) : 
+  CUnit(float x, float y, float z, XYZ skin_color, XYZ hair_color) : 
   IUnit(x,y,z), 
   skin_color(skin_color), 
   hair_color(hair_color), 
@@ -255,7 +272,6 @@ public:
       if (ai_state==AI_STAND_AROUND) {
         current_animation=idle[direction];
       }
-     
   }
   
   CPlayerRenderable(float x, float y, float z) : CUnit(x,y,z,XYZ(1.0,1.0,1.0),XYZ(1.0,1.0,0.3)) {

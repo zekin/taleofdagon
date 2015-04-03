@@ -21,7 +21,6 @@ public:
   CMap(int width, int height) : 
   IMap(width, height) { }
 
-
   CTile* at(int x, int y) {
     int chunk_num=0;
     int chunk_x=0;
@@ -48,7 +47,7 @@ public:
 //    }
     return chunks.at(chunk_num)->at(x,y);
   }
-  CChunk* getChunk(int x, int y) {
+  virtual CChunk* getChunk(int x, int y) {
     int chunk_num=0;
     int chunk_x=0;
     int chunk_y=0;
@@ -148,7 +147,6 @@ public:
     glBindTexture(GL_TEXTURE_2D, map_walls_resource->getTextureID(tile));   
     switch(direction) {
       case DIRECTION_NORTH:
-       
         break;
         
       case DIRECTION_EAST:
@@ -210,7 +208,9 @@ public:
     initialized_tile_data=true;
   }
   /* collision detection needs work, movement needs to be less restrictive. */
-  bool collide(int posx, int posy) {
+  virtual bool collide(int posx, int posy) {
+    
+      INFO(LOG) << posx << " " << posy;
       switch(at(posx,posy)->num) {
         case TILE_CITY_WALL:
         case TILE_MOUNTAIN:
@@ -219,6 +219,7 @@ public:
         case TILE_WATER:
           return true;
       }
+      
       return false;
   }
   void renderChunk(float posx, float posy, float pos_frac_x, float pos_frac_y, int render_tiles_view) {
@@ -236,17 +237,17 @@ public:
             unit->AI();
             if (unit->ai_state==AI_WALKING) {
             //std::cout << "x" << u->x << " y" << u->y << std::endl;
-            if (unit->direction==DIRECTION_NORTH) 
-              if (!collide(round(unit->x),round(unit->y-0.5) ))
-                unit->move();
-            if (unit->direction==DIRECTION_EAST) 
-              if (!collide(round(unit->x+0.5),round(unit->y) ))
-                unit->move();
-            if (unit->direction==DIRECTION_SOUTH)
-              if (!collide(round(unit->x) ,round(unit->y+0.5) ))
-                unit->move();
-            if (unit->direction==DIRECTION_WEST)
-              if (!collide(round(unit->x-0.5),round(unit->y) ))
+//            if (unit->direction==DIRECTION_NORTH) 
+//              if (!collide(round(unit->x),round(unit->y-0.5) ))
+//                unit->move();
+//            if (unit->direction==DIRECTION_EAST) 
+//              if (!collide(round(unit->x+0.5),round(unit->y) ))
+//                unit->move();
+//            if (unit->direction==DIRECTION_SOUTH)
+//              if (!collide(round(unit->x) ,round(unit->y+0.5) ))
+//                unit->move();
+//            if (unit->direction==DIRECTION_WEST)
+//              if (!collide(round(unit->x-0.5),round(unit->y) ))
                 unit->move();
             }
             chunk->getObject(i)->render(posx,posy,pos_frac_x, pos_frac_y, render_tiles_view);             

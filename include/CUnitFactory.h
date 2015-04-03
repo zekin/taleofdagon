@@ -37,6 +37,7 @@ public:
       events->notify(EVENT_GAME_ENDED);
     }
     
+    events->notify(EVENT_UNIT_CREATED);
     return createdUnit;
   }
   virtual void notify( Event* e ) {

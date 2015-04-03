@@ -211,5 +211,6 @@ public:
      
     Globals::tile_call_initialized=true;
   }
+  virtual bool collide(int posx, int posy)=0;
 };
 #endif

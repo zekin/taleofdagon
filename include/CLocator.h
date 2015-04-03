@@ -5,8 +5,10 @@
 #include "logging.h"
 
 class IUnitFactory;
+class IMap;
 
 static IUnitFactory* g_unitFactory=0;
+static IMap* g_map=0;
 
 class CLocator {
 public: 
@@ -31,6 +33,23 @@ public:
     
     INFO(LOG) << "Setting factory to " << factory;
     g_unitFactory = factory;
+  }
+  static IMap* getMap() {
+    if ( !g_map ) {
+      ERROR(LOG) << "Map is not set yet! Exiting...";
+    }
+    return g_map;
+  }
+  static void setMap(IMap* map) {
+    if ( map ) {
+      ERROR(LOG) << "Map passed to function is not set!";
+    }
+    
+    if ( g_map ) {
+      WARN(LOG) << "g_map is already set! Replacing g_map! with passed in pointer. Is this intentional?";
+    }
+    
+    g_map = map;
   }
 };
 

@@ -177,6 +177,7 @@ public:
         CEventManager::getInstance()->notify(Event(EVENT_PLAY_MUSIC,MUSIC_FOREST));
         CEventManager::getInstance()->notify(Event(EVENT_CAMERA_TARGET,(long)CPlayerRenderable::getInstance()));       
         CEventManager::getInstance()->subscribe(0, CWorldMap::getInstance());
+        CLocator::setMap((IMap*)CWorldMap::getInstance());
         CWorldMap::getInstance()->notify(e);
         CEventManager::getInstance()->subscribe(0, &DialogManager);
         CEventManager::getInstance()->notify(Event(EVENT_SPAWN_DIALOG, DIALOG_1_START_DAGON));			
