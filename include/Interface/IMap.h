@@ -116,9 +116,9 @@ public:
               break;
           }
           
-          if ( unit ) {
-            addObject( unit );
-          }
+//          if ( unit ) {
+//            addObject( unit );
+//          }
 
         }
         this->tiles.push_back(new CTile(tile_properties.tile_number,tile_properties.area_type));
@@ -141,76 +141,21 @@ struct WallInformation {
   WallInformation(float height, int tile_type) {}
 };
 
+class CTile;
 class IMap : public IEventable {
 protected:
-  int width;
-  int height;
-  bool initialized_tile_data;
-  int chunks_wide;
-  int chunks_high;
-  std::vector<CChunk*> chunks;
-  unsigned int texture_tiles[20];
-  CMapSheet* map_tiles_resource;
-  CSpriteSheet* map_walls_resource;
-  SDL_Surface* map_tiles_surface; 
+
 public:
-  IMap(int width, int height) :
-  width(width), 
-  height(height), 
-  map_tiles_surface(0), 
-  map_tiles_resource(0), 
-  initialized_tile_data(false), 
-  chunks_wide(0), 
-  chunks_high(0) {
-    /* load image for tiles */
-    if (width%Globals::chunk_size>0) {
-      this->width=(width/Globals::chunk_size)*Globals::chunk_size; // or modulus
-      INFO(LOG) << "Invalid width specified, not a multiple of chunksize(" << Globals::chunk_size << "), reverting to floor of nearest:" << width;
-    } 
-    if (height%Globals::chunk_size>0) {
-      this->height=(height/Globals::chunk_size)*Globals::chunk_size;
-      INFO(LOG) << "Invalid height specified, not a multiple of chunksize(" << Globals::chunk_size << "), reverting to floor of nearest:" << height;
-    }
-    chunks_wide=width/Globals::chunk_size;
-    chunks_high=height/Globals::chunk_size;
-    map_tiles_resource=CResourceManager::getInstance()->getMapSheet("./graphics/tile3.png",16,16);
-    map_walls_resource=CResourceManager::getInstance()->getSpriteSheet("./graphics/tile3.png",16,16);   
-    if (Globals::tile_call_initialized==false) {
-      initializeTileCalls();
-    }
-  }
-  void initializeTileCalls() {
-    for (int i=0; i<29; i++) {
-      Globals::tile_call.push_back(glGenLists(1));
-      glNewList(Globals::tile_call[i],GL_COMPILE);
-      glBindTexture(GL_TEXTURE_2D, map_tiles_resource->getTextureID(i));
-      glBegin(GL_QUADS);
-      if (i==TILE_ICE_MOUNTAIN || i==TILE_RIGID_MOUNTAIN || i==TILE_MOUNTAIN) {
-        glTexCoord2d(0.0,1.0);
-        glVertex3d(-1,-1,0);
-        glTexCoord2d(0.0,0.0);
-        glVertex3d(-1,1,0);
-        glTexCoord2d(1.0,0.0);
-        glVertex3d(1,1,0);
-        glTexCoord2d(1.0,1.0);
-        glVertex3d(1,-1,0);
-      } else {
-        glTexCoord2d(0.0,1.0);
-        glVertex3d(-1,-1,0.1);
-        glTexCoord2d(0.0,0.0);
-        glVertex3d(-1,1,0.1);
-        glTexCoord2d(1.0,0.0);
-        glVertex3d(1,1,0.1);
-        glTexCoord2d(1.0,1.0);
-        glVertex3d(1,-1,0.1);
-        glEnd();
-     }
-      glEnd();
-      glEndList();
-    }
-     
-    Globals::tile_call_initialized=true;
-  }
-  virtual bool collide(int posx, int posy)=0;
+  virtual void initializeTileCalls() = 0;
+  virtual bool collide(int posx, int posy) = 0;
+  virtual CTile* at(int x, int y) = 0;
+  virtual CChunk* getChunk(int x, int y) = 0;
+  virtual int hasTileWall(int direction, int x, int y) = 0;
+  virtual void renderRoof(int tile) = 0;
+  virtual void renderWall(int direction, int tile) = 0;
+  virtual void initialize(int chunk_number) = 0;
+  virtual void renderChunk(float posx, float posy, float pos_frac_x, float pos_frac_y, int render_tiles_view) = 0;
+  virtual void renderTiles(float time) = 0;
+  
 };
 #endif

@@ -17,11 +17,76 @@
 
 
 class CMap : public IMap {
+protected:
+  int width;
+  int height;
+  bool initialized_tile_data;
+  int chunks_wide;
+  int chunks_high;
+  std::vector<CChunk*> chunks;
+  unsigned int texture_tiles[20];
+  CMapSheet* map_tiles_resource;
+  CSpriteSheet* map_walls_resource;
+  SDL_Surface* map_tiles_surface; 
 public:
-  CMap(int width, int height) : 
-  IMap(width, height) { }
-
-  CTile* at(int x, int y) {
+  CMap(int width, int height) :
+  width(width), 
+  height(height), 
+  map_tiles_surface(0), 
+  map_tiles_resource(0), 
+  initialized_tile_data(false), 
+  chunks_wide(0), 
+  chunks_high(0) {
+    /* load image for tiles */
+    if (width%Globals::chunk_size>0) {
+      this->width=(width/Globals::chunk_size)*Globals::chunk_size; // or modulus
+      INFO(LOG) << "Invalid width specified, not a multiple of chunksize(" << Globals::chunk_size << "), reverting to floor of nearest:" << width;
+    } 
+    if (height%Globals::chunk_size>0) {
+      this->height=(height/Globals::chunk_size)*Globals::chunk_size;
+      INFO(LOG) << "Invalid height specified, not a multiple of chunksize(" << Globals::chunk_size << "), reverting to floor of nearest:" << height;
+    }
+    chunks_wide=width/Globals::chunk_size;
+    chunks_high=height/Globals::chunk_size;
+    map_tiles_resource=CResourceManager::getInstance()->getMapSheet("./graphics/tile3.png",16,16);
+    map_walls_resource=CResourceManager::getInstance()->getSpriteSheet("./graphics/tile3.png",16,16);   
+    if (Globals::tile_call_initialized==false) {
+      initializeTileCalls();
+    }
+  }
+  virtual void initializeTileCalls() {
+    for (int i=0; i<29; i++) {
+      Globals::tile_call.push_back(glGenLists(1));
+      glNewList(Globals::tile_call[i],GL_COMPILE);
+      glBindTexture(GL_TEXTURE_2D, map_tiles_resource->getTextureID(i));
+      glBegin(GL_QUADS);
+      if (i==TILE_ICE_MOUNTAIN || i==TILE_RIGID_MOUNTAIN || i==TILE_MOUNTAIN) {
+        glTexCoord2d(0.0,1.0);
+        glVertex3d(-1,-1,0);
+        glTexCoord2d(0.0,0.0);
+        glVertex3d(-1,1,0);
+        glTexCoord2d(1.0,0.0);
+        glVertex3d(1,1,0);
+        glTexCoord2d(1.0,1.0);
+        glVertex3d(1,-1,0);
+      } else {
+        glTexCoord2d(0.0,1.0);
+        glVertex3d(-1,-1,0.1);
+        glTexCoord2d(0.0,0.0);
+        glVertex3d(-1,1,0.1);
+        glTexCoord2d(1.0,0.0);
+        glVertex3d(1,1,0.1);
+        glTexCoord2d(1.0,1.0);
+        glVertex3d(1,-1,0.1);
+        glEnd();
+     }
+      glEnd();
+      glEndList();
+    }
+     
+    Globals::tile_call_initialized=true;
+  }
+  virtual CTile* at(int x, int y) {
     int chunk_num=0;
     int chunk_x=0;
     int chunk_y=0;
@@ -67,7 +132,7 @@ public:
   }
   
   /* TODO: needs refactoring */
-  int hasTileWall(int direction, int x, int y) {
+  virtual int hasTileWall(int direction, int x, int y) {
     CTile* src_tile=at(x,y);
     CTile* dest_tile;
     if (src_tile==0) 
@@ -121,6 +186,7 @@ public:
     }
   }
   void renderRoof(int tile) {
+    
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
     
@@ -140,6 +206,7 @@ public:
     
   }
   void renderWall(int direction, int tile) {
+    
     XYZ colors(0,0,0);
     colors=CCamera::getInstance()->timeOfDay(true);   
     glEnable(GL_DEPTH_TEST);
@@ -197,7 +264,7 @@ public:
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
   }
-  void initialize(int chunk_number) {
+  virtual void initialize(int chunk_number) {
     /* load tile data */
     if (initialized_tile_data==true) 
       return;
@@ -222,7 +289,7 @@ public:
       
       return false;
   }
-  void renderChunk(float posx, float posy, float pos_frac_x, float pos_frac_y, int render_tiles_view) {
+  virtual void renderChunk(float posx, float posy, float pos_frac_x, float pos_frac_y, int render_tiles_view) {
     for (int j=-16; j<=16; j+=16) {
       for (int k=-16; k<=16; k+=16) {
         CChunk* chunk=getChunk(round(posx-j),round(posy-k));

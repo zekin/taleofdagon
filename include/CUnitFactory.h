@@ -6,6 +6,8 @@
 #include "CUnitFighter.h"
 #include "CUnitVillager.h"
 #include "CUnitKnight.h"
+#include "CLocator.h"
+#include "IMap.h"
   
 class CUnitFactory : public IUnitFactory {
 protected:
@@ -16,6 +18,7 @@ public:
   
   virtual IUnit* createUnit(int unitType, float x, float y) {
     CEventManager* events=CEventManager::getInstance();
+    IMap* map = CLocator::getMap();
     IUnit* createdUnit=NULL;
     
     switch(unitType) {
@@ -38,6 +41,8 @@ public:
     }
     
     events->notify(EVENT_UNIT_CREATED);
+    
+    map->getChunk(x,y)->addObject(createdUnit);
     return createdUnit;
   }
   virtual void notify( Event* e ) {
