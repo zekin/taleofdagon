@@ -4,19 +4,19 @@
 
 class CObjectUtil {
 private:
-  CObjectUtil() {
-  }
-public:
-  static bool isTypeAUnit(int type) {
-    switch( type ) {
-      case UNIT_TYPE_FIGHTER:
-      case UNIT_TYPE_KNIGHT:
-      case UNIT_TYPE_VILLAGER:
-        return true;
-      default:
-        return false;
+    CObjectUtil() {
     }
-  }
+public:
+    static bool isTypeAUnit(int type) {
+        switch( type ) {
+        case UNIT_TYPE_FIGHTER:
+        case UNIT_TYPE_KNIGHT:
+        case UNIT_TYPE_VILLAGER:
+            return true;
+        default:
+            return false;
+        }
+    }
 };
 
 #endif

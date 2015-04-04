@@ -6,13 +6,13 @@
 
 class IUnitFactory : public IEventable {
 public:
-  enum {
-    UNIT_FIGHTER,
-    UNIT_KNIGHT,
-    UNIT_VILLAGER
-  };
-  virtual IUnit* createUnit(int unitType, float x, float y) = 0;
-  
+    enum {
+        UNIT_FIGHTER,
+        UNIT_KNIGHT,
+        UNIT_VILLAGER
+    };
+    virtual IUnit* createUnit(int unitType, float x, float y) = 0;
+
 };
 
 #endif

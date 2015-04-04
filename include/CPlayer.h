@@ -16,51 +16,51 @@
 //  float hit;
 //  float regen;
 //  float spd;
-//  
+//
 //};
 enum {
-  ANIM_IDLE,
-  ANIM_WALK,
-  ANIM_ATTACK,
-  ANIM_CAST,
-  ANIM_USE
+    ANIM_IDLE,
+    ANIM_WALK,
+    ANIM_ATTACK,
+    ANIM_CAST,
+    ANIM_USE
 };
 struct Animation {
 private:
-  float time;
-  std::vector<int> frame_numbers;
+    float time;
+    std::vector<int> frame_numbers;
 public:
-  Animation() {}
-  
-  
+    Animation() {}
+
+
 };
 class CAnimationSheet : public CSpriteSheet {
 
 private:
-  Animation Idle[4];
-  Animation Walk[4];
-  Animation Attack[4];
-  Animation Use[4];
+    Animation Idle[4];
+    Animation Walk[4];
+    Animation Attack[4];
+    Animation Use[4];
 public:
-  CAnimation() {
-    
-  }
-  void setAnimation(int AnimationType, int Direction, std::vector<int> frame_order, float time) {
-    switch(AnimationType) {
-      case ANIM_IDLE:
-      case ANIM_WALK:
-      case ANIM_ATTACK:
-      case ANIM_CAST:
-      case ANIM_USE:
-      default:
-        std::clog << "Error: No animation type exists for this case." << std::endl;
-    };
-  }
-  
+    CAnimation() {
+
+    }
+    void setAnimation(int AnimationType, int Direction, std::vector<int> frame_order, float time) {
+        switch(AnimationType) {
+        case ANIM_IDLE:
+        case ANIM_WALK:
+        case ANIM_ATTACK:
+        case ANIM_CAST:
+        case ANIM_USE:
+        default:
+            std::clog << "Error: No animation type exists for this case." << std::endl;
+        };
+    }
+
 };
 //class CAnimationManager {
-//  
-//  
+//
+//
 //};
 //class CMapTarget {
 //  CSpriteSheet* sheet;
@@ -68,7 +68,7 @@ public:
 //  }
 //  virtual void setAnimation(int animationType, int direction) {
 //  }
-//  
+//
 //};
 //class CItem : public CMapTarget {
 //  CItem() {
@@ -77,14 +77,14 @@ public:
 //class CLiving : public CMapTarget, public IEventable {
 //  Stats stats;
 //  CLiving(float x, float y, float w, float h) {
-//    
+//
 //  }
 //};
 //class CPlayer : public CUnit {
 //  CPlayer() {
-//    
+//
 //  }
-//  
+//
 //};
 
 #endif

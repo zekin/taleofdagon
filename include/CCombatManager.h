@@ -8,12 +8,12 @@ public:
     CCombatManager() {
     }
     virtual void notify(Event* e) {
-      switch(e->type) {
+        switch(e->type) {
         case EVENT_UNIT_HIT_UNIT_WITH:
-          CEventManager::getInstance()->notify(Event(EVENT_COMBAT_STARTED,0));
-          break;
-      }
+            CEventManager::getInstance()->notify(Event(EVENT_COMBAT_STARTED,0));
+            break;
+        }
     }
-  
+
 };
 #endif
