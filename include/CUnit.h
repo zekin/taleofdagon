@@ -129,7 +129,7 @@ public:
             break;
         }
 
-        if (map->collide(round(desiredMoveX),round(desiredMoveY)) == false) {
+        if (map->collide(this, round(desiredMoveX),round(desiredMoveY)) == false) {
             this->x = desiredMoveX;
             this->y = desiredMoveY;
         }
@@ -297,6 +297,8 @@ public:
     
     virtual void ability(int ability) {
         IUnitFactory* factory = CLocator::getUnitFactory();
+        IMap* map = CLocator::getMap();
+        
         int spawnLocationX = x;
         int spawnLocationY = y;
         const int spawnRadius = 3;
@@ -318,7 +320,11 @@ public:
         
         switch ( ability ) {
             case ABILITY_SPAWN_DEBUG:
-                factory->createUnit(IUnitFactory::UNIT_FIGHTER, spawnLocationX, spawnLocationY);
+                if ( map->collide(NULL, spawnLocationX, spawnLocationY) == false ) {
+                    factory->createUnit(IUnitFactory::UNIT_FIGHTER, spawnLocationX, spawnLocationY);
+                }
+                
+                ai_state=AI_STAND_AROUND;
                 break;
         }
     }

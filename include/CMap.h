@@ -14,8 +14,6 @@
 #include "logging.h"
 #include "IMap.h"
 
-
-
 class CMap : public IMap {
 protected:
     int width;
@@ -205,6 +203,7 @@ public:
         glEnable(GL_BLEND);
 
     }
+    
     void renderWall(int direction, int tile) {
 
         XYZ colors(0,0,0);
@@ -264,6 +263,7 @@ public:
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
     }
+    
     virtual void initialize(int chunk_number) {
         /* load tile data */
         if (initialized_tile_data==true)
@@ -274,9 +274,9 @@ public:
         }
         initialized_tile_data=true;
     }
+    
     /* collision detection needs work, movement needs to be less restrictive. */
-    virtual bool collide(int posx, int posy) {
-
+    virtual bool collide(IUnit* srcUnit, int posx, int posy) {
         switch(at(posx,posy)->tileType) {
         case TILE_CITY_WALL:
         case TILE_MOUNTAIN:
@@ -285,9 +285,20 @@ public:
         case TILE_WATER:
             return true;
         }
+        
+        
+        CChunk* chunk = getChunk(posx, posy);
+        IUnit* unitInChunk = chunk->getUnit(0);
+
+        for ( int i = 0; unitInChunk; i++, unitInChunk = chunk->getUnit(i) ) {
+            if (round(unitInChunk->x) == posx && round(unitInChunk->y) == posy && srcUnit != unitInChunk) {
+                return true;
+            }
+        }
 
         return false;
     }
+    
     virtual void renderChunk(float posx, float posy, float pos_frac_x, float pos_frac_y, int render_tiles_view) {
         for (int j=-16; j<=16; j+=16) {
             for (int k=-16; k<=16; k+=16) {
@@ -322,6 +333,7 @@ public:
             }
         }
     }
+    
     void renderTiles(float time) {
         static float last_animation_time=0;
         static int index=0;
@@ -441,6 +453,7 @@ public:
 //    return instance;
 //  }
 //};
+
 class CWorldMap : public CMap {
 public:
     CWorldMap() : CMap(2000,2000) {

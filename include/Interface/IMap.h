@@ -35,16 +35,17 @@ class CChunk : public IChunk {
 private:
     std::vector<CTile*> tiles;
     std::vector<CRenderable*> objects;
-    std::vector<CUnit*> units;
+    std::vector<IUnit*> units;
 
     bool initialized;
     int chunk_number;
+    
 public:
     CChunk(int chunk_number) :
         initialized(false),
         chunk_number(chunk_number) {}
 
-    CTile* at(int x, int y) {
+    virtual CTile* at(int x, int y) {
         if (!initialized) {
             setTiles(x,y);
         }
@@ -52,30 +53,42 @@ public:
         y=y%Globals::chunk_size;
         return tiles[y*Globals::chunk_size+x];
     }
-    CRenderable* getObject(int number) {
-        if (number >= objects.size()) {
-            return 0;
+    
+    virtual CRenderable* getObject(int index) {
+        if ( index >= objects.size() ) {
+            return NULL;
         } else {
-            return objects.at(number);
+            return objects.at(index);
         }
     }
-    void addObject(CRenderable* object) {
+    
+    virtual IUnit* getUnit(int index) {
+        if ( index >= units.size() ) {
+            return NULL;
+        } else {
+            return units.at(index);
+        }       
+    }
+    
+    virtual void addObject(CRenderable* object) {
         for (int i=0; i<objects.size(); i++) {
             if ( object == objects[i] ) {
                 INFO(LOG) << "Object already registered inside chunk number " << chunk_number;
                 return;
             }
         }
-
+        
         INFO(LOG) << "Object added to chunk number " << chunk_number;
-
         objects.push_back(object);
         
+        INFO(LOG) << "obect type" << object->type;
         if (CObjectUtil::isTypeAUnit(object->type)) {
-            units.push_back((CUnit*)object);
+            INFO(LOG) << "Unit added to chunk";
+            units.push_back((IUnit*)object);
         }
     }
-    void removeObject(CRenderable* object) {
+    
+    virtual void removeObject(CRenderable* object) {
         for ( int i=0; i < objects.size(); i++ ) {
             if ( object == objects[i] ) {
                 INFO(LOG) << "Object removed from chunk number " << chunk_number;
@@ -91,16 +104,16 @@ public:
             }
         }
     }
-    void setTiles(int x, int y) {
+    virtual void setTiles(int x, int y) {
         IUnitFactory* unitGenerator=CLocator::getUnitFactory();
         /* a create chunk function */
         int offsetx=x%Globals::chunk_size;
         int offsety=y%Globals::chunk_size;
+        
         for ( int i = y - offsety; i < y - offsety + Globals::chunk_size; i++ ) {
             for ( int j = x - offsetx; j < x - offsetx + Globals::chunk_size; j++ ) {
                 TileInstantiation tile_properties=Globals::getTileAt(2000,2000,j,i);
-//        if (tile_properties.object_type)
-//          addObject(new CMapObjectRenderable(tile_properties.object_type,j,i,0));
+                
                 if ( tile_properties.unit_type ) {
                     CRenderable* unit = NULL;
                     /* cheap way of instantiating units for now, i think we should sent off a CREATE_UNIT message and register them with the unit manager */
@@ -116,10 +129,6 @@ public:
                         break;
                     }
 
-//          if ( unit ) {
-//            addObject( unit );
-//          }
-
                 }
                 this->tiles.push_back(new CTile(tile_properties.tile_number,tile_properties.area_type));
             }
@@ -127,10 +136,12 @@ public:
         INFO(LOG) << "Creating chunk " << chunk_number;
         initialized=true;
     }
-    bool isInitialized() {
+    
+    virtual bool isInitialized() {
         return initialized;
     }
-    void setInitialized() {
+    
+    virtual void setInitialized() {
         initialized=true;
     }
 };
@@ -147,7 +158,7 @@ protected:
 
 public:
     virtual void initializeTileCalls() = 0;
-    virtual bool collide(int posx, int posy) = 0;
+    virtual bool collide(IUnit* srcUnit, int posx, int posy) = 0;
     virtual CTile* at(int x, int y) = 0;
     virtual CChunk* getChunk(int x, int y) = 0;
     virtual int hasTileWall(int direction, int x, int y) = 0;

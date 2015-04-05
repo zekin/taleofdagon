@@ -98,7 +98,6 @@ public:
         em->notify(Event(EVENT_GAME_STARTED, (long)screen, 60.0));
         em->notify(Event(EVENT_SWITCH_STATES, STATE_MENU));
 
-
         initializeServiceLocator();
     }
 

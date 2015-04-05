@@ -1,6 +1,7 @@
 #ifndef CUNITUTIL_H
 #define CUNITUTIL_H
 #include "enum.h"
+#include "CRenderable.h"
 
 class CObjectUtil {
 private:
@@ -9,9 +10,7 @@ private:
 public:
     static bool isTypeAUnit(int type) {
         switch( type ) {
-        case UNIT_TYPE_FIGHTER:
-        case UNIT_TYPE_KNIGHT:
-        case UNIT_TYPE_VILLAGER:
+        case RENDERABLE_UNIT:
             return true;
         default:
             return false;
