@@ -17,16 +17,41 @@ public:
     char tileType;
     char area;
     CTile(char tile_number, char area=AREA_GRASSLANDS) : tileType(tile_number), area(area) {}
-    CLASSIFIER getClassifier() {
-        switch(tileType) {
-        case TILE_GRASS:
-        case TILE_SAND:
-            return GROUND;
-        case TILE_WATER:
-            return SEA;
-        case TILE_MOUNTAIN:
-            return CLIFF;
-        }
+
+    bool isWaterType() {
+        if ( tileType == TILE_WATER )
+            return true;
+        else
+            return false;
+    }
+    
+    bool isMountainType() {
+      if ( tileType == TILE_MOUNTAIN || 
+           tileType == TILE_ICE_MOUNTAIN || 
+           tileType == TILE_RIGID_MOUNTAIN )
+          return true;
+      else
+          return false;
+    }
+    
+    bool isWallType() {
+      if (tileType == TILE_MOUNTAIN || 
+          tileType == TILE_ICE_MOUNTAIN || 
+          tileType == TILE_RIGID_MOUNTAIN || 
+          tileType == TILE_CITY_WALL)
+          return true;
+      else
+          return false;
+    }
+    bool isCollidable() {
+      if (tileType == TILE_MOUNTAIN || 
+          tileType == TILE_ICE_MOUNTAIN || 
+          tileType == TILE_RIGID_MOUNTAIN || 
+          tileType == TILE_CITY_WALL || 
+          tileType == TILE_WATER)
+          return true;
+      else
+          return false;       
     }
 };
 
@@ -106,6 +131,7 @@ public:
     }
     virtual void setTiles(int x, int y) {
         IUnitFactory* unitGenerator=CLocator::getUnitFactory();
+        
         /* a create chunk function */
         int offsetx=x%Globals::chunk_size;
         int offsety=y%Globals::chunk_size;
@@ -153,15 +179,14 @@ struct WallInformation {
 };
 
 class CTile;
-class IMap : public IEventable {
-protected:
 
+class IMap : public IEventable {
 public:
     virtual void initializeTileCalls() = 0;
     virtual bool collide(IUnit* srcUnit, int posx, int posy) = 0;
     virtual CTile* at(int x, int y) = 0;
     virtual CChunk* getChunk(int x, int y) = 0;
-    virtual int hasTileWall(int direction, int x, int y) = 0;
+    virtual bool hasTileWall(int direction, int x, int y) = 0;
     virtual void renderRoof(int tile) = 0;
     virtual void renderWall(int direction, int tile) = 0;
     virtual void initialize(int chunk_number) = 0;
