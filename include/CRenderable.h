@@ -45,7 +45,7 @@ public:
 
 //    std::clog << CClock::getInstance()->getTime()-time_last;
 //    time_last=CClock::getInstance()->getTime();
-        this->y-=clock->deltaT()/2.0;//(CClock::getInstance()->getTime()-time_last)/2.0;
+//        this->y-=clock->deltaT()/2.0;//(CClock::getInstance()->getTime()-time_last)/2.0;
 
 //    time_last=CClock::getInstance()->getTime();
     }

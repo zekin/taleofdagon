@@ -149,6 +149,12 @@ public:
         }
     }
 
+    virtual bool isMoving() {
+        if (ai_state == AI_WALKING) 
+            return true;
+        
+        return false;
+    }
     CUnit(float x, float y, float z) : IUnit(x,y,z),
         //create redder tones for skin
 //    skin_color(0.5+(float)rand()/(RAND_MAX), 0.5+(float)rand()/(RAND_MAX), 0.5+(float)rand()/(RAND_MAX)),

@@ -8,6 +8,7 @@
 #include "CGUI.h"
 #include "CRenderable.h"
 #include "CDialogManager.h"
+
 class IState : public IEventable {
 private:
     int state_id;
@@ -79,7 +80,7 @@ public:
         }
         if (e->type == EVENT_INITIALIZE) {
             CEventManager::getInstance()->notify(Event(EVENT_PLAY_MUSIC,MUSIC_INTRO));
-            CEventManager::getInstance()->notify(Event(EVENT_CAMERA_TARGET,(long)CIntroCamera::getInstance()));
+//            CEventManager::getInstance()->notify(Event(EVENT_CAMERA_TARGET,(long)CIntroCamera::getInstance()));
             CEventManager::getInstance()->subscribe(0, CWorldMap::getInstance());
             CWorldMap::getInstance()->notify(e);
             CEventManager::getInstance()->subscribe(0, &gui);
@@ -178,7 +179,7 @@ public:
             CEventManager::getInstance()->notify(Event(EVENT_PLAY_MUSIC,MUSIC_FOREST));
             CEventManager::getInstance()->notify(Event(EVENT_CAMERA_TARGET,(long)CPlayerRenderable::getInstance()));
             CEventManager::getInstance()->subscribe(0, CWorldMap::getInstance());
-            CLocator::setMap((IMap*)CWorldMap::getInstance());
+    //        CLocator::setMap((IMap*)CWorldMap::getInstance());
             CWorldMap::getInstance()->notify(e);
             CEventManager::getInstance()->subscribe(0, &DialogManager);
             CEventManager::getInstance()->notify(Event(EVENT_SPAWN_DIALOG, DIALOG_1_START_DAGON));

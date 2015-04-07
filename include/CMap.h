@@ -440,7 +440,7 @@ public:
     }
     virtual void notify(Event* e) {
         if (e->type==EVENT_RENDER_FRAME) {
-//            renderTiles(e->x);
+            //renderTiles(e->x);
         }
         if (e->type==EVENT_INITIALIZE) {
             initialize(0);

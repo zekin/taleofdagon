@@ -15,9 +15,9 @@ private:
 public:
     CEngine() :
         currentState(0) {
+        CLocator::setMap(CWorldMap::getInstance());
         CEventManager::getInstance()->subscribe(0,this);
         currentState=&stateMainMenu;
-        CLocator::setMap(CWorldMap::getInstance());
     }
     
     virtual void notify(Event* e) {

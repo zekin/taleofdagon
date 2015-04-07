@@ -33,9 +33,10 @@ protected:
     IUnit(int x, int y, int z) : CRenderable(x,y,z) {}
     float unitPosX;
     float unitPosY;
-protected:
+public:
     virtual void init() = 0;
     virtual void move() = 0;
     virtual void AI() = 0;
+    virtual bool isMoving() = 0;
 };
 #endif
