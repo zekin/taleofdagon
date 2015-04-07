@@ -43,6 +43,7 @@ public:
       else
           return false;
     }
+    
     bool isCollidable() {
       if (tileType == TILE_MOUNTAIN || 
           tileType == TILE_ICE_MOUNTAIN || 
@@ -129,6 +130,7 @@ public:
             }
         }
     }
+    
     virtual void setTiles(int x, int y) {
         IUnitFactory* unitGenerator=CLocator::getUnitFactory();
         
@@ -183,6 +185,7 @@ class CTile;
 class IMap : public IEventable {
 public:
     virtual void initializeTileCalls() = 0;
+    virtual bool isInitialized() = 0;
     virtual bool collide(IUnit* srcUnit, int posx, int posy) = 0;
     virtual CTile* at(int x, int y) = 0;
     virtual CChunk* getChunk(int x, int y) = 0;

@@ -11,8 +11,8 @@ public:
         UNIT_KNIGHT,
         UNIT_VILLAGER
     };
+    
     virtual IUnit* createUnit(int unitType, float x, float y) = 0;
-
 };
 
 #endif

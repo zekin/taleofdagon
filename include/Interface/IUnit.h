@@ -1,6 +1,7 @@
 #ifndef IUNIT_H
 #define IUNIT_H
 #include "CRenderable.h"
+
 enum {
     SKIN_WHITE,
     SKIN_BLACK,
@@ -8,12 +9,14 @@ enum {
     SKIN_RED,
     SKIN_BROWN
 };
+
 enum {
     AI_PLAYER,
     AI_STAND_AROUND,
     AI_WALKING,
     AI_ATTACK
 };
+
 enum {
     ARMOR_CLOTHES,
     ARMOR_SCALEMAIL,

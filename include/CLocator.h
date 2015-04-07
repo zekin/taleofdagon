@@ -6,9 +6,11 @@
 
 class IUnitFactory;
 class IMap;
+class IRenderer;
 
 static IUnitFactory* g_unitFactory=0;
 static IMap* g_map=0;
+static IRenderer* g_renderer=0;
 
 class CLocator {
 public:
@@ -17,11 +19,11 @@ public:
             ERROR(LOG) << "Unit factory is not set! Exiting..";
             return NULL;
         }
+        
         return (IUnitFactory*) g_unitFactory;
     }
 
-    static void setUnitFactory(IUnitFactory* factory)
-    {
+    static void setUnitFactory(IUnitFactory* factory) {
         if ( !factory ) {
             INFO(LOG) << "Factory passed in is NULL.";
             return;
@@ -32,17 +34,19 @@ public:
         }
 
         INFO(LOG) << "Setting factory to " << factory;
+        
         g_unitFactory = factory;
     }
     static IMap* getMap() {
-        if ( !g_map ) {
+        if ( g_map == NULL ) {
             ERROR(LOG) << "Map is not set yet! Exiting...";
         }
         return g_map;
     }
     static void setMap(IMap* map) {
-        if ( map ) {
+        if ( ! map ) {
             ERROR(LOG) << "Map passed to function is not set!";
+            return;
         }
 
         if ( g_map ) {
@@ -50,6 +54,25 @@ public:
         }
 
         g_map = map;
+    }
+    static IRenderer* getRenderer() {
+        if ( ! g_renderer ) {
+            ERROR(LOG) << "Renderer is not yet set! Exiting...";
+        }
+        
+        return g_renderer;
+    }
+    static void setRenderer(IRenderer* renderer) {
+        if ( ! renderer ) {
+            ERROR(LOG) << "Renderer passed to function is not set!";
+            return;
+        }
+        
+        if ( g_renderer ) {
+            WARN(LOG) << "Renderer is already set! Replacing g_renderer with passed in pointer. Is this intentional?";
+        }
+        
+        g_renderer = renderer;
     }
 };
 

@@ -142,11 +142,12 @@ private:
     CRenderable GameCamera;
     bool directions[4];
     CDialogManager DialogManager;
-    CGUIWorldMap WorldMap;
     CGameConsole console;
     bool world_map_on;
 
+    CGUIWorldMap WorldMap;
 public:
+    
     CStateGame() :
         enabled(false),
         GameCamera(700,1200,0),
@@ -181,7 +182,6 @@ public:
             CWorldMap::getInstance()->notify(e);
             CEventManager::getInstance()->subscribe(0, &DialogManager);
             CEventManager::getInstance()->notify(Event(EVENT_SPAWN_DIALOG, DIALOG_1_START_DAGON));
-
             CEventManager::getInstance()->subscribe(0, &console);
 
 

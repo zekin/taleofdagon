@@ -9,6 +9,7 @@
 #include "logging.h"
 #include "CLocator.h"
 #include "CUnitFactory.h"
+#include "CRenderer.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,12 +31,15 @@ private:
 
 private: /* Services */
     CUnitFactory* unitFactory;
+    CRenderer* renderer;
 
 private: /* Helper methods */
     void initializeServiceLocator() {
         unitFactory = new CUnitFactory();
+        renderer = new CRenderer();
 
         CLocator::setUnitFactory( (IUnitFactory*) unitFactory );
+        CLocator::setRenderer( (IRenderer*) renderer );       
     }
 
 public:

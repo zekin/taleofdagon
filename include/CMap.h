@@ -263,6 +263,9 @@ public:
         }
         initialized_tile_data=true;
     }
+    virtual bool isInitialized() {
+        return initialized_tile_data;
+    }
     
     /* collision detection needs work, movement needs to be less restrictive. */
     virtual bool collide(IUnit* srcUnit, int posx, int posy) {
@@ -400,11 +403,10 @@ public:
 
     virtual void notify(Event* e) {
         if (e->type == EVENT_RENDER_FRAME) {
-            renderTiles(e->x);
+//            renderTiles(e->x);
         }
         if (e->type == EVENT_INITIALIZE) {
             initialize(0);
-
         }
     }
 };
@@ -438,7 +440,7 @@ public:
     }
     virtual void notify(Event* e) {
         if (e->type==EVENT_RENDER_FRAME) {
-            renderTiles(e->x);
+//            renderTiles(e->x);
         }
         if (e->type==EVENT_INITIALIZE) {
             initialize(0);
