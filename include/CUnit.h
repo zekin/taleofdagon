@@ -215,23 +215,23 @@ public:
         glEnable(GL_DEPTH_TEST);
         glPushMatrix();
         glTranslatef(offset_x,offset_y,0);
+
+
+        glRotatef(-45,1,0,0);
+
         if (shadow) {
             glBindTexture(GL_TEXTURE_2D, shadow->getTextureID(0));
             glBegin(GL_QUADS);
             glTexCoord2f(0,1);
-            glVertex3f(-0.5,-0.5,0); //glVertex3f(-1.0,-1.0,0);
+            glVertex3f(-0.5,0.0,0); //glVertex3f(-1.0,-1.0,0);
             glTexCoord2f(0,0);
-            glVertex3f(-0.5,0.5,0.0); //glVertex3f(1.0,-1.0,0);
+            glVertex3f(-0.5,0.0,0.3); //glVertex3f(1.0,-1.0,0);
             glTexCoord2f(1,0);
-            glVertex3f(0.5,0.5,0.0); //glVertex3f(1.0,1.0,0);
+            glVertex3f(0.5,0.0,0.3); //glVertex3f(1.0,1.0,0);
             glTexCoord2f(1,1);
-            glVertex3f(0.5,-0.5,0.0); //glVertex3f(-1.0,1.0,0);
+            glVertex3f(0.5,0.0,0.0); //glVertex3f(-1.0,1.0,0);
             glEnd();
         }
-
-        glRotatef(-45,1,0,0);
-
-
         XYZ day_color=CCamera::getInstance()->timeOfDay(true);
         glColor3f(skin_color.x*day_color.x,skin_color.y*day_color.y,skin_color.z*day_color.z);
 
@@ -239,13 +239,13 @@ public:
         glBindTexture(GL_TEXTURE_2D, sheet->getTextureID(current_animation->getFrame(CClock::getInstance()->getTime())));
         glBegin(GL_QUADS);
         glTexCoord2f(0,1);
-        glVertex3f(-1.0,0.0,0); //glVertex3f(-1.0,-1.0,0);
+        glVertex3f(-1.0,0.0,0.15); //glVertex3f(-1.0,-1.0,0);
         glTexCoord2f(0,0);
         glVertex3f(-1.0,0,2.0); //glVertex3f(1.0,-1.0,0);
         glTexCoord2f(1,0);
         glVertex3f(1.0,0,2.0); //glVertex3f(1.0,1.0,0);
         glTexCoord2f(1,1);
-        glVertex3f(1.0,0,0.0); //glVertex3f(-1.0,1.0,0);
+        glVertex3f(1.0,0,0.15); //glVertex3f(-1.0,1.0,0);
         glEnd();
 
         if (armor) {
@@ -254,13 +254,13 @@ public:
                 glBindTexture(GL_TEXTURE_2D, armor->sheet->getTextureID(current_animation->getFrame(CClock::getInstance()->getTime())));
                 glBegin(GL_QUADS);
                 glTexCoord2f(0,1);
-                glVertex3f(-1.0,0.0,0); //glVertex3f(-1.0,-1.0,0);
+                glVertex3f(-1.0,0.0,0.15); //glVertex3f(-1.0,-1.0,0);
                 glTexCoord2f(0,0);
                 glVertex3f(-1.0,0,2.0); //glVertex3f(1.0,-1.0,0);
                 glTexCoord2f(1,0);
                 glVertex3f(1.0,0,2.0); //glVertex3f(1.0,1.0,0);
                 glTexCoord2f(1,1);
-                glVertex3f(1.0,0,0.0); //glVertex3f(-1.0,1.0,0);
+                glVertex3f(1.0,0,0.15); //glVertex3f(-1.0,1.0,0);
                 glEnd();
             }
         }
@@ -269,13 +269,13 @@ public:
         glBindTexture(GL_TEXTURE_2D, hair->getTextureID(current_animation->getFrame(CClock::getInstance()->getTime())));
         glBegin(GL_QUADS);
         glTexCoord2f(0,1);
-        glVertex3f(-1.0,0.0,0); //glVertex3f(-1.0,-1.0,0);
+        glVertex3f(-1.0,0.0,0.15); //glVertex3f(-1.0,-1.0,0);
         glTexCoord2f(0,0);
         glVertex3f(-1.0,0,2.0); //glVertex3f(1.0,-1.0,0);
         glTexCoord2f(1,0);
         glVertex3f(1.0,0,2.0); //glVertex3f(1.0,1.0,0);
         glTexCoord2f(1,1);
-        glVertex3f(1.0,0,0.0); //glVertex3f(-1.0,1.0,0);
+        glVertex3f(1.0,0,0.15); //glVertex3f(-1.0,1.0,0);
         glEnd();
         glRotatef(45,1,0,0);
         glPopMatrix();

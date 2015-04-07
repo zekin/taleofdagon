@@ -101,6 +101,7 @@ public:
         
         glPopMatrix();
         
+        objectList.clear();
         fillRenderListForXY(cameraPos.x, cameraPos.y);
         for (std::list<CRenderable*>::iterator object = objectList.begin(); object != objectList.end(); ++object) {
             if ((*object)->type == RENDERABLE_UNIT) {
@@ -113,10 +114,7 @@ public:
                 unitInList->render(cameraPos.x,cameraPos.y,cameraPosFrac.x,cameraPosFrac.y,tileRenderRange); 
             }
         }
-        objectList.clear();
 
-        
-        
         glPopMatrix();
     }
     
