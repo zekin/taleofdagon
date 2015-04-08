@@ -20,7 +20,6 @@ bool renderSort(CRenderable* first, CRenderable* second) {
 }
 class CRenderer : public IRenderer { 
     std::vector<IChunk*> chunkList;
-    
     std::list<CRenderable*> objectList;
 //    std::list<CRenderable*> render;
     int tileRenderRange;
@@ -29,15 +28,17 @@ class CRenderer : public IRenderer {
 private:
     void fillRenderListForXY(float cameraPosX, float cameraPosY) {
         IMap* map = CLocator::getMap();
+        int chunkSize = Globals::chunk_size;
         
         if ( ! objectList.empty() ) {
             ERROR(LOG) << "Object render list is not empty!";
             return;
         }
         
-        for ( int i = round(cameraPosY) + tileRenderRange; i >= round(cameraPosY) - tileRenderRange; i -= Globals::chunk_size ) {
-            for ( int j = round(cameraPosX) - tileRenderRange; j <= round(cameraPosX) + tileRenderRange; j += Globals::chunk_size ) {
-                CChunk* chunk = map->getChunk( round(cameraPosX), round(cameraPosY) );
+        /* Grab objects 3 x 3 chunks around camera. */
+        for ( int i = round(cameraPosY) + chunkSize; i >= round(cameraPosY) - chunkSize; i -= chunkSize ) {
+            for ( int j = round(cameraPosX) - chunkSize; j <= round(cameraPosX) + chunkSize; j += chunkSize) {
+                CChunk* chunk = map->getChunk( round(j), round(i) );
                 
                 for ( int k=0; chunk->getObject(k); k++) {
                     objectList.push_back(chunk->getObject(k));
@@ -78,6 +79,7 @@ public:
         glPushMatrix();
         glTranslatef( -(tileRenderRange+cameraPosFrac.x), -(tileRenderRange+cameraPosFrac.y), 0);
         glPushMatrix();
+        /* Render Tiles */
         
         for ( int i = round(cameraPos.y) + tileRenderRange; i >= round(cameraPos.y) - tileRenderRange; i-- ) {
             glPushMatrix();
@@ -101,32 +103,74 @@ public:
         
         glPopMatrix();
         
-        objectList.clear();
-        fillRenderListForXY(cameraPos.x, cameraPos.y);
-        for (std::list<CRenderable*>::iterator object = objectList.begin(); object != objectList.end(); ++object) {
-            if ((*object)->type == RENDERABLE_UNIT) {
-                IUnit* unitInList = (IUnit*)(*object);
-                unitInList->AI();
+        /* Render Mountains */
+        glPushMatrix();
+        for ( int i = round(cameraPos.y) + tileRenderRange; i >= round(cameraPos.y) - tileRenderRange; i-- ) {
+            glPushMatrix();
+            
+            for ( int j = round(cameraPos.x) - tileRenderRange; j <= round(cameraPos.x) + tileRenderRange; j++ ) {
+                CTile* current=map->at(j,i);
                 
-                if (unitInList->isMoving())
-                    unitInList->move();
-                
-                unitInList->render(cameraPos.x,cameraPos.y,cameraPosFrac.x,cameraPosFrac.y,tileRenderRange); 
+                if (current!=0) {
+                    if ( current->isWallType() ) {
+                        if (!map->hasTileWall(DIRECTION_SOUTH, j,i))
+                            map->renderWall(DIRECTION_SOUTH, current->tileType);
+                        if (!map->hasTileWall(DIRECTION_WEST, j,i))
+                            map->renderWall(DIRECTION_WEST, current->tileType);
+                        if (!map->hasTileWall(DIRECTION_EAST, j,i))
+                            map->renderWall(DIRECTION_EAST, current->tileType);
+                        map->renderRoof(current->tileType);
+                    }
+                }
+                glTranslatef(1,0,0);
             }
+            glPopMatrix();
+            glTranslatef(0,1,0);
         }
-
+        glPopMatrix();       
+        
+        /* Render Units */
+        for (std::list<CRenderable*>::iterator object = objectList.begin(); object != objectList.end(); ++object) {
+            (*object)->render(cameraPos.x,cameraPos.y,cameraPosFrac.x,cameraPosFrac.y,tileRenderRange); 
+        }
         glPopMatrix();
     }
     
     virtual void update() {
         IMap* map = CLocator::getMap();
         CCamera* camera = CCamera::getInstance();
+        XY cameraPos = camera->getXY();
         
-        if ( map == NULL ) {
+        if ( map == NULL ) 
             return;
-        }
         
- //       XY camera->getXY();
+        
+        objectList.clear();
+        fillRenderListForXY(cameraPos.x, cameraPos.y);
+        
+        for (std::list<CRenderable*>::iterator object = objectList.begin(); object != objectList.end(); ++object) {
+            if ((*object)->type == RENDERABLE_UNIT) {
+                IUnit* unitInList = (IUnit*)(*object);
+                CChunk* currentChunk = NULL;
+                CChunk* chunkToCheckAgainst = NULL;
+                
+                unitInList->AI();
+                
+                if ( ! unitInList->isMoving())
+                    continue;
+                
+                currentChunk = map->getChunk( round(unitInList->x), round(unitInList->y) );
+                unitInList->move();
+                chunkToCheckAgainst = map->getChunk( round(unitInList->x), round(unitInList->y) );
+                
+                /* If unit is moving, check if the chunk needs to change. */
+                if ( chunkToCheckAgainst != currentChunk ) {
+                    currentChunk->removeObject( (CRenderable*) unitInList );
+                    chunkToCheckAgainst->addObject( (CRenderable*) unitInList );
+                }
+                
+            }
+        }
     }
     
     virtual void addChunk(IChunk* addedChunk) {
@@ -152,7 +196,7 @@ public:
     virtual void notify(Event* event) {
         switch( event->type ) {
             case EVENT_RENDER_FRAME:
-//                update();
+                update();
                 render();
                 break;
         }

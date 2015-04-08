@@ -546,7 +546,7 @@ void generateWorldImage() {
                 color=0x5FABD4;
                 break;
             case TILE_RIGID_MOUNTAIN:
-                color=0x606060;
+                color=0x706060;
                 break;
             case TILE_CRACKED_ICE:
                 color=0xE8EBD1;

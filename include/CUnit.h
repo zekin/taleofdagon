@@ -218,7 +218,7 @@ public:
 
 
         glRotatef(-45,1,0,0);
-
+        glColor4f(1,1,1,0.4);
         if (shadow) {
             glBindTexture(GL_TEXTURE_2D, shadow->getTextureID(0));
             glBegin(GL_QUADS);
@@ -232,6 +232,7 @@ public:
             glVertex3f(0.5,0.0,0.0); //glVertex3f(-1.0,1.0,0);
             glEnd();
         }
+        glColor4f(1,1,1,1);
         XYZ day_color=CCamera::getInstance()->timeOfDay(true);
         glColor3f(skin_color.x*day_color.x,skin_color.y*day_color.y,skin_color.z*day_color.z);
 
@@ -291,6 +292,7 @@ public:
         ABILITY_SPAWN_DEBUG
     };
     virtual void AI() {
+        
         if (ai_state==AI_STAND_AROUND) {
             current_animation=idle[direction];
         }
@@ -351,37 +353,7 @@ public:
     }
 };
 
-class CMapObjectRenderable : public CRenderable {
-private:
-    int obj_number;
-public:
-    CMapObjectRenderable(int type, float x, float y, float z) : CRenderable(x,y,z), obj_number(type) {
-        sheet=CResourceManager::getInstance()->getSpriteSheet("./graphics/map_object.png",32,32,false);
-    }
 
-    virtual void render(float pos_x, float pos_y, float pos_frac_x, float pos_frac_y, int render_tiles_view) {
-        float offset_x=x-pos_x+pos_frac_x+render_tiles_view;
-        float offset_y=pos_y-y+pos_frac_y+render_tiles_view;
-        glEnable(GL_DEPTH_TEST);
-        glBindTexture(GL_TEXTURE_2D, sheet->getTextureID(obj_number));
-        glPushMatrix();
-        glTranslatef(offset_x,offset_y,0);
-        glRotatef(-45,1,0,0);
-        glBegin(GL_QUADS);
-        glTexCoord2f(0,1);
-        glVertex3f(-1.0,0.0,0); //glVertex3f(-1.0,-1.0,0);
-        glTexCoord2f(0,0);
-        glVertex3f(-1.0,0,2.0); //glVertex3f(1.0,-1.0,0);
-        glTexCoord2f(1,0);
-        glVertex3f(1.0,0,2.0); //glVertex3f(1.0,1.0,0);
-        glTexCoord2f(1,1);
-        glVertex3f(1.0,0,0.0); //glVertex3f(-1.0,1.0,0);
-        glEnd();
-        glRotatef(45,1,0,0);
-        glPopMatrix();
-        glDisable(GL_DEPTH_TEST);
-    }
-};
 
 
 #endif

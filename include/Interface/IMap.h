@@ -156,8 +156,14 @@ public:
                         unit = unitGenerator->createUnit(IUnitFactory::UNIT_FIGHTER,j,i);
                         break;
                     }
-
                 }
+                
+                if ( tile_properties.object_type ) {
+                    CMapObjectRenderable* mapObject = new CMapObjectRenderable( tile_properties.object_type, j, i, 0 );
+                    
+                    addObject( (CRenderable*) mapObject );
+                }
+                
                 this->tiles.push_back(new CTile(tile_properties.tile_number,tile_properties.area_type));
             }
         }

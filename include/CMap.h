@@ -296,10 +296,10 @@ public:
                 while ( currentChunk->getObject(i) ) {
                     if ( currentChunk->getObject(i)->type==RENDERABLE_UNIT ) {
                         CUnit* unit=(CUnit*)(currentChunk->getObject(i));
-                        unit->AI();
+//                        unit->AI();
                         
                         if ( unit->ai_state==AI_WALKING ) {
-                            unit->move();
+//                            unit->move();
                         }
                         
                         currentChunk->getObject(i)->render(posx,posy,pos_frac_x, pos_frac_y, render_tiles_view);
