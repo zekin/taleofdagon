@@ -24,6 +24,8 @@ class CRenderer : public IRenderer {
 //    std::list<CRenderable*> render;
     int tileRenderRange;
     float waterAnimationDelay;
+    float lastWaterAnimationTime;
+    int waterIndex;
     
 private:
     void fillRenderListForXY(float cameraPosX, float cameraPosY) {
@@ -49,7 +51,7 @@ private:
         objectList.sort(renderSort);
     }
 public:
-    CRenderer() : tileRenderRange(14), waterAnimationDelay(0.30) {
+    CRenderer() : tileRenderRange(14), waterAnimationDelay(0.30), waterIndex(0) {
         CEventManager::getInstance()->subscribe(0,this);
     }
     
@@ -57,11 +59,18 @@ public:
     virtual void render() {
         IMap* map = CLocator::getMap();
         CCamera* camera = CCamera::getInstance();
+        float currentWaterAnimationTime = CClock::getInstance()->getTime();
+        
         XY cameraPos = camera->getXY();
         XY cameraPosFrac = camera->getXY();
         
         cameraPosFrac.x =  cameraPos.x - (round(cameraPos.x));
         cameraPosFrac.y =-(cameraPos.y - (round(cameraPos.y)));       
+        
+        if ( currentWaterAnimationTime > lastWaterAnimationTime + waterAnimationDelay ) {
+            waterIndex = (waterIndex + 1) % 4;
+            lastWaterAnimationTime = currentWaterAnimationTime;
+        }
         
         if ( map == NULL ) {
             INFO(LOG) << "Map not set yet.";
@@ -90,7 +99,7 @@ public:
                 if ( ! tileAtLocation )
                     continue;
                 else if ( tileAtLocation->isWaterType() )
-                    glCallList( Globals::tile_call[TILE_WATER] );
+                    glCallList( Globals::tile_call[TILE_WATER + waterIndex] );
                 else if ( ! tileAtLocation->isMountainType() )
                     glCallList( Globals::tile_call[tileAtLocation->tileType] );
                 

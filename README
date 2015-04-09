@@ -1,7 +1,6 @@
 Tale of Dagon
 -------------
-* Get game working over git
-* Sort polygons in rendering order.
-- Keep list of chunks currently loaded and in area
-  on chunk allocation and deallocation, fix draw order
-  
+- Add more map objects (furniture).
+- Add shops to town.
+- Add items to game.
+- Sprite item objects.

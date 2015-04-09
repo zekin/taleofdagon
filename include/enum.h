@@ -500,8 +500,17 @@ TileInstantiation getTileAt(float width, float height, float x, float y) {
             } else if (chance > 0.95) {
                 tile_being_built.object_type=MAP_OBJECT_EVERGREEN_L;
             }
-
-
+        }
+    }
+    if (precipitation == PRECIPITATION_DRY && tile_being_built.tile_number==TILE_CRACKED_GROUND) {
+        double chance = (generateNoiseXY((int)x,(int)y)+1)/2.0;
+        tile_being_built.area_type=AREA_DESERT;
+        if (chance > 0.97) {
+            if (chance > 0.99) {
+                tile_being_built.object_type=MAP_OBJECT_CACTUS_S;
+            } else if (chance > 0.97) {
+                tile_being_built.object_type=MAP_OBJECT_CACTUS_L;
+            }
         }
     }
 
@@ -546,7 +555,7 @@ void generateWorldImage() {
                 color=0x5FABD4;
                 break;
             case TILE_RIGID_MOUNTAIN:
-                color=0x706060;
+                color=0x686060;
                 break;
             case TILE_CRACKED_ICE:
                 color=0xE8EBD1;
