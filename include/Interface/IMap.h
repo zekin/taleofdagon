@@ -5,57 +5,13 @@
 #include "CEventManager.h"
 #include "CRenderable.h"
 #include "CUnit.h"
-#include "CObjectUtil.h"
 #include "IChunk.h"
 #include "IUnitFactory.h"
+#include "ITileFactory.h"
 #include "CLocator.h"
+#include "CTile.h"
 
 class CUnit;
-
-class CTile {
-public:
-    char tileType;
-    char area;
-    CTile(char tile_number, char area=AREA_GRASSLANDS) : tileType(tile_number), area(area) {}
-
-    bool isWaterType() {
-        if ( tileType == TILE_WATER )
-            return true;
-        else
-            return false;
-    }
-    
-    bool isMountainType() {
-      if ( tileType == TILE_MOUNTAIN || 
-           tileType == TILE_ICE_MOUNTAIN || 
-           tileType == TILE_RIGID_MOUNTAIN )
-          return true;
-      else
-          return false;
-    }
-    
-    bool isWallType() {
-      if (tileType == TILE_MOUNTAIN || 
-          tileType == TILE_ICE_MOUNTAIN || 
-          tileType == TILE_RIGID_MOUNTAIN || 
-          tileType == TILE_CITY_WALL)
-          return true;
-      else
-          return false;
-    }
-    
-    bool isCollidable() {
-      if (tileType == TILE_MOUNTAIN || 
-          tileType == TILE_ICE_MOUNTAIN || 
-          tileType == TILE_RIGID_MOUNTAIN || 
-          tileType == TILE_CITY_WALL || 
-          tileType == TILE_WATER)
-          return true;
-      else
-          return false;       
-    }
-};
-
 
 class CChunk : public IChunk {
 private:
@@ -108,7 +64,7 @@ public:
         objects.push_back(object);
         
         INFO(LOG) << "obect type" << object->type;
-        if (CObjectUtil::isTypeAUnit(object->type)) {
+        if ( object->isAUnit() ) {
             INFO(LOG) << "Unit added to chunk";
             units.push_back((IUnit*)object);
         }
@@ -132,7 +88,8 @@ public:
     }
     
     virtual void setTiles(int x, int y) {
-        IUnitFactory* unitGenerator=CLocator::getUnitFactory();
+        IUnitFactory* unitGenerator = CLocator::getUnitFactory();
+        ITileFactory* tileGenerator = CLocator::getTileFactory();
         
         /* a create chunk function */
         int offsetx=x%Globals::chunk_size;
@@ -163,8 +120,9 @@ public:
                     
                     addObject( (CRenderable*) mapObject );
                 }
+                CTile* tile = tileGenerator->createTile( tile_properties.tile_number, tile_properties.area_type );
                 
-                this->tiles.push_back(new CTile(tile_properties.tile_number,tile_properties.area_type));
+                tiles.push_back( tile );
             }
         }
         INFO(LOG) << "Creating chunk " << chunk_number;
@@ -190,7 +148,6 @@ class CTile;
 
 class IMap : public IEventable {
 public:
-    virtual void initializeTileCalls() = 0;
     virtual bool isInitialized() = 0;
     virtual bool collide(IUnit* srcUnit, int posx, int posy) = 0;
     virtual CTile* at(int x, int y) = 0;

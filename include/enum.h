@@ -213,8 +213,10 @@ enum {
 };
 
 enum {
-    MAP_OBJECT_CACTUS_S=1,
-    MAP_OBJECT_CACTUS_L=2,
+    MAP_OBJECT_CACTUS_S=0,
+    MAP_OBJECT_CACTUS_L=1,
+    MAP_OBJECT_ROCK=2,
+    MAP_OBJECT_TABLE=3,
     MAP_OBJECT_EVERGREEN_L=4,
     MAP_OBJECT_EVERGREEN_S=5,
     MAP_OBJECT_TREE=6
@@ -319,13 +321,13 @@ void generateWorldMapImage() {
                 switch(temperature_category) {
                 case TEMP_COLD:
                     color=0xB38B89;
-                    break; //FROZEN WATER CHUNKS
+                    break; // Frozen water chunks
                 case TEMP_WARM:
                     color=0xE3716D;
                     break;
                 case TEMP_HOT:
                     color=0xE3716D;
-                    break; //WATER IS WATER MAN, HOT WATER DOESNT CHANGE IT
+                    break; // Hot water ?
                 }
                 break;
             case ELEVATION_ABOVE_SEA:
@@ -387,7 +389,7 @@ int getPrecipitation(int x, int y) {
     }
 }
 
-void buildTownWalls(TileInstantiation* tile_being_built, int x1, int y1, int x2, int y2, int posx, int posy) {
+void buildTownWalls(TileInstantiation* tile_being_built, int tileType, int x1, int y1, int x2, int y2, int posx, int posy) {
     if (!tile_being_built) {
         INFO(LOG) << "Tile being built called with no tile in BuildTownWalls ? ";
         return;
@@ -397,10 +399,12 @@ void buildTownWalls(TileInstantiation* tile_being_built, int x1, int y1, int x2,
             (x1 <= posx && posx <= x2 && posy==y2) ||
             (y1 <= posy && posy <= y2 && posx==x1) ||
             (y1 <= posy && posy <= y2 && posx==x2) ) {
-        tile_being_built->tile_number=TILE_CITY_WALL;
+        tile_being_built->tile_number=tileType;
 
     }
 }
+
+
 void fillRectWith(TileInstantiation* tile_being_built, int tile_type, int area_type, int x1, int y1, int x2, int y2, int posx, int posy) {
     if (!tile_being_built) {
         INFO(LOG) << "Tile being built called with no tile in FillRectWith ? ";
@@ -411,6 +415,33 @@ void fillRectWith(TileInstantiation* tile_being_built, int tile_type, int area_t
         tile_being_built->area_type=area_type;
     }
 }
+void fillRectWithObjects(TileInstantiation* tile_being_built, int object_type, int x1, int y1, int x2, int y2, int posx, int posy) {
+    if (!tile_being_built) {
+        INFO(LOG) << "Tile being built called with no tile in FillRectWith ? ";
+        return;
+    }
+    if (x1 <= posx && posx <= x2 && y1 <= posy && posy <= y2) {
+        tile_being_built->object_type=object_type;
+    }
+}
+void buildHouse(TileInstantiation* tile_being_built, int x1, int y1, int x2, int y2, int posx, int posy) {
+    if (!tile_being_built) {
+        INFO(LOG) << "Tile being built called with no tile in BuildTownWalls ? ";
+        return;
+    }
+    
+    int doorLocationY = y2;
+    int doorLocationXCenter = x1 + (x2 - x1) / 2;
+    int doorLocationX1 = doorLocationXCenter - 1;
+    int doorLocationX2 = doorLocationXCenter + 1;
+    
+    fillRectWith(tile_being_built, TILE_CITY_HOUSE_FLOOR, AREA_CITY, x1, y1, x2, y2, posx, posy);
+    //there's a better way to check if a value is within the rectangle edges or not, but my brain isnt working right now
+    buildTownWalls(tile_being_built, TILE_CITY_HOUSE_WALL, x1, y1, x2, y2, posx, posy);
+    fillRectWith(tile_being_built, TILE_CITY_HOUSE_FLOOR, AREA_CITY, doorLocationX1,doorLocationY,doorLocationX2,doorLocationY, posx, posy);
+    fillRectWithObjects(tile_being_built, MAP_OBJECT_TABLE, x1+1, y1+3, x2-1, y1+3, posx, posy);
+}
+
 TileInstantiation getTileAt(float width, float height, float x, float y) {
     int elevation=Globals::getTileHeight(2000,2000,x,y);
     int color=0;
@@ -508,16 +539,19 @@ TileInstantiation getTileAt(float width, float height, float x, float y) {
         if (chance > 0.97) {
             if (chance > 0.99) {
                 tile_being_built.object_type=MAP_OBJECT_CACTUS_S;
-            } else if (chance > 0.97) {
+            } else if (chance > 0.98) {
                 tile_being_built.object_type=MAP_OBJECT_CACTUS_L;
+            } else if (chance > 0.97) {
+                tile_being_built.object_type=MAP_OBJECT_ROCK;
             }
         }
     }
 
     /* now check for hardcoded static objects */ //Building the first town (Valleyholme?)
     fillRectWith(&tile_being_built,TILE_CITY_GROUND,AREA_CITY,596,1414,710,1533,x,y);
-    buildTownWalls(&tile_being_built,596,1414,710,1533,x,y);
+    buildTownWalls(&tile_being_built,TILE_CITY_WALL,596,1414,710,1533,x,y);
     fillRectWith(&tile_being_built,TILE_CITY_STONE_WALL,AREA_CITY,594,1470,712,1472,x,y);
+    buildHouse(&tile_being_built,600,1430,610,1440,x,y);   
     if (tile_being_built.area_type==AREA_CITY && tile_being_built.tile_number != TILE_CITY_WALL) {
         double chance = (generateNoiseXY((int)x,(int)y)+1)/2.0;
         if (chance > 0.998) {

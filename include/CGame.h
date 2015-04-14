@@ -9,6 +9,7 @@
 #include "logging.h"
 #include "CLocator.h"
 #include "CUnitFactory.h"
+#include "CTileFactory.h"
 #include "CRenderer.h"
 
 #include <stdio.h>
@@ -32,13 +33,16 @@ private:
 private: /* Services */
     CUnitFactory* unitFactory;
     CRenderer* renderer;
+    CTileFactory* tileFactory;
 
 private: /* Helper methods */
     void initializeServiceLocator() {
         unitFactory = new CUnitFactory();
+        tileFactory = new CTileFactory();
         renderer = new CRenderer();
 
         CLocator::setUnitFactory( (IUnitFactory*) unitFactory );
+        CLocator::setTileFactory( (ITileFactory*) tileFactory );
         CLocator::setRenderer( (IRenderer*) renderer );       
     }
 
@@ -95,6 +99,7 @@ public:
         glMatrixMode(GL_MODELVIEW);
         SDL_WM_SetCaption("Tale of Dagon", 0);
 
+        initializeServiceLocator();
         sound_manager = new CSoundSystem();
         engine = new CEngine();
         camera=CCamera::getInstance();
@@ -102,7 +107,6 @@ public:
         em->notify(Event(EVENT_GAME_STARTED, (long)screen, 60.0));
         em->notify(Event(EVENT_SWITCH_STATES, STATE_MENU));
 
-        initializeServiceLocator();
     }
 
     int events() {

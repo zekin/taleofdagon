@@ -8,6 +8,8 @@
 #include "enum.h"
 #include "IRenderer.h"
 #include "CEventManager.h"
+#include "IResource.h"
+#include "CTile.h"
 #include <list>
 
 
@@ -26,6 +28,10 @@ class CRenderer : public IRenderer {
     float waterAnimationDelay;
     float lastWaterAnimationTime;
     int waterIndex;
+    
+    CMapSheet* map_tiles_resource;
+    CSpriteSheet* map_walls_resource;
+    SDL_Surface* map_tiles_surface;
     
 private:
     void fillRenderListForXY(float cameraPosX, float cameraPosY) {
@@ -47,12 +53,46 @@ private:
                 }
             }
         }
-        
-        objectList.sort(renderSort);
     }
+    
+    void initializeTileCalls() {
+        for (int i=0; i<29; i++) {
+            Globals::tile_call.push_back(glGenLists(1));
+            glNewList(Globals::tile_call[i],GL_COMPILE);
+            glBindTexture(GL_TEXTURE_2D, map_tiles_resource->getTextureID(i));
+            glBegin(GL_QUADS);
+            if (i==TILE_ICE_MOUNTAIN || i==TILE_RIGID_MOUNTAIN || i==TILE_MOUNTAIN) {
+                glTexCoord2d(0.0,1.0);
+                glVertex3d(-1,-1,0);
+                glTexCoord2d(0.0,0.0);
+                glVertex3d(-1,1,0);
+                glTexCoord2d(1.0,0.0);
+                glVertex3d(1,1,0);
+                glTexCoord2d(1.0,1.0);
+                glVertex3d(1,-1,0);
+            } else {
+                glTexCoord2d(0.0,1.0);
+                glVertex3d(-1,-1,0.1);
+                glTexCoord2d(0.0,0.0);
+                glVertex3d(-1,1,0.1);
+                glTexCoord2d(1.0,0.0);
+                glVertex3d(1,1,0.1);
+                glTexCoord2d(1.0,1.0);
+                glVertex3d(1,-1,0.1);
+                glEnd();
+            }
+            glEnd();
+            glEndList();
+        }
+    }
+    
 public:
     CRenderer() : tileRenderRange(14), waterAnimationDelay(0.30), waterIndex(0) {
+        CResourceManager* resources = CResourceManager::getInstance();
         CEventManager::getInstance()->subscribe(0,this);
+        map_tiles_resource = resources->getMapSheet("./graphics/tile3.png",16,16);
+        map_walls_resource = resources->getSpriteSheet("./graphics/tile3.png",16,16);
+        initializeTileCalls();
     }
     
 
@@ -101,7 +141,7 @@ public:
                 else if ( tileAtLocation->isWaterType() )
                     glCallList( Globals::tile_call[TILE_WATER + waterIndex] );
                 else if ( ! tileAtLocation->isMountainType() )
-                    glCallList( Globals::tile_call[tileAtLocation->tileType] );
+                    tileAtLocation->render();
                 
                 glTranslatef(1,0,0);
             }
@@ -118,18 +158,21 @@ public:
             glPushMatrix();
             
             for ( int j = round(cameraPos.x) - tileRenderRange; j <= round(cameraPos.x) + tileRenderRange; j++ ) {
-                CTile* current=map->at(j,i);
+                CTile* tileAtLocation=map->at(j,i);
                 
-                if (current!=0) {
-                    if ( current->isWallType() ) {
-                        if (!map->hasTileWall(DIRECTION_SOUTH, j,i))
-                            map->renderWall(DIRECTION_SOUTH, current->tileType);
-                        if (!map->hasTileWall(DIRECTION_WEST, j,i))
-                            map->renderWall(DIRECTION_WEST, current->tileType);
-                        if (!map->hasTileWall(DIRECTION_EAST, j,i))
-                            map->renderWall(DIRECTION_EAST, current->tileType);
-                        map->renderRoof(current->tileType);
-                    }
+                if ( tileAtLocation != 0 ) {
+                    
+                    tileAtLocation->renderRoof();
+//                    if ( tileAtLocation->isWallType() ) {
+//                        if (!map->hasTileWall(DIRECTION_SOUTH, j, i))
+//                            map->renderWall(DIRECTION_SOUTH, tileAtLocation->getTileType() );
+//                        if (!map->hasTileWall(DIRECTION_WEST, j, i))
+//                            map->renderWall(DIRECTION_WEST, tileAtLocation->getTileType() );
+//                        if (!map->hasTileWall(DIRECTION_EAST, j, i))
+//                            map->renderWall(DIRECTION_EAST, tileAtLocation->getTileType() );
+//                        
+//                        map->renderRoof( tileAtLocation->getTileType() );
+//                    }
                 }
                 glTranslatef(1,0,0);
             }
@@ -180,26 +223,15 @@ public:
                 
             }
         }
-    }
-    
-    virtual void addChunk(IChunk* addedChunk) {
-        if ( addedChunk == NULL ) {
-            ERROR(LOG) << "No passed to renderer. Is this chunk deallocated?";
-            return;
-        }
         
-        chunkList.push_back(addedChunk);
+        objectList.sort(renderSort);
     }
     
-    virtual void removeChunk(IChunk* chunkToRemove) {
-        for ( int i = 0; i < chunkList.size(); i++ ) { 
-            if ( chunkToRemove == chunkList[i] ) {
-//                chunkList.erase(i);
-            }
-        }
+    virtual CMapSheet* getMapSheet() {
+        return map_tiles_resource;
     }
-    
-    virtual void flagChunkAsDirty(IChunk* dirtyChunk) {
+    virtual CSpriteSheet* getWallSheet() {
+        return map_walls_resource;
     }
     
     virtual void notify(Event* event) {
@@ -209,6 +241,19 @@ public:
                 render();
                 break;
         }
+    }
+    virtual bool isIndoors() {
+        CCamera* camera = CCamera::getInstance();
+        IMap* map = CLocator::getMap();
+        XY position = camera->getXY();
+        
+        CTile* tile = map->at(position.x,position.y);
+        
+        if ( tile->isIndoors() ) 
+            return true;
+        else
+            return false;
+            
     }
 };
 

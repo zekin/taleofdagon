@@ -22,6 +22,16 @@ public:
     float x;
     float y;
     float z;
+    
+    virtual bool isAUnit() {
+        switch( type ) {
+        case RENDERABLE_UNIT:
+            return true;
+        default:
+            return false;
+        }
+    }
+    
 };
 class CMapObjectRenderable : public CRenderable {
 private:

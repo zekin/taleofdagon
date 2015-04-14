@@ -47,44 +47,11 @@ public:
         }
         chunks_wide=width/Globals::chunk_size;
         chunks_high=height/Globals::chunk_size;
-        map_tiles_resource=CResourceManager::getInstance()->getMapSheet("./graphics/tile3.png",16,16);
-        map_walls_resource=CResourceManager::getInstance()->getSpriteSheet("./graphics/tile3.png",16,16);
-        if (Globals::tile_call_initialized==false) {
-            initializeTileCalls();
-        }
-    }
-    
-    virtual void initializeTileCalls() {
-        for (int i=0; i<29; i++) {
-            Globals::tile_call.push_back(glGenLists(1));
-            glNewList(Globals::tile_call[i],GL_COMPILE);
-            glBindTexture(GL_TEXTURE_2D, map_tiles_resource->getTextureID(i));
-            glBegin(GL_QUADS);
-            if (i==TILE_ICE_MOUNTAIN || i==TILE_RIGID_MOUNTAIN || i==TILE_MOUNTAIN) {
-                glTexCoord2d(0.0,1.0);
-                glVertex3d(-1,-1,0);
-                glTexCoord2d(0.0,0.0);
-                glVertex3d(-1,1,0);
-                glTexCoord2d(1.0,0.0);
-                glVertex3d(1,1,0);
-                glTexCoord2d(1.0,1.0);
-                glVertex3d(1,-1,0);
-            } else {
-                glTexCoord2d(0.0,1.0);
-                glVertex3d(-1,-1,0.1);
-                glTexCoord2d(0.0,0.0);
-                glVertex3d(-1,1,0.1);
-                glTexCoord2d(1.0,0.0);
-                glVertex3d(1,1,0.1);
-                glTexCoord2d(1.0,1.0);
-                glVertex3d(1,-1,0.1);
-                glEnd();
-            }
-            glEnd();
-            glEndList();
-        }
-
-        Globals::tile_call_initialized=true;
+//        map_tiles_resource=CResourceManager::getInstance()->getMapSheet("./graphics/tile3.png",16,16);
+//        map_walls_resource=CResourceManager::getInstance()->getSpriteSheet("./graphics/tile3.png",16,16);
+//        if (Globals::tile_call_initialized==false) {
+//            initializeTileCalls();
+//        }
     }
     
     virtual CTile* at(int x, int y) {
@@ -361,7 +328,7 @@ public:
                     glCallList( Globals::tile_call[TILE_WATER+index] );
                 } else if ( tileAtLocation ) {
                     if ( ! tileAtLocation->isMountainType() ) {
-                        glCallList( Globals::tile_call[tileAtLocation->tileType] );
+                        glCallList( Globals::tile_call[tileAtLocation->getTileType() ] );
                     }
                 }
                 glTranslatef(1,0,0);
@@ -382,12 +349,12 @@ public:
                 if (current!=0) {
                     if ( current->isWallType() ) {
                         if (!hasTileWall(DIRECTION_SOUTH, j,i))
-                            renderWall(DIRECTION_SOUTH, current->tileType);
+                            renderWall(DIRECTION_SOUTH, current->getTileType() );
                         if (!hasTileWall(DIRECTION_WEST, j,i))
-                            renderWall(DIRECTION_WEST, current->tileType);
+                            renderWall(DIRECTION_WEST, current->getTileType() );
                         if (!hasTileWall(DIRECTION_EAST, j,i))
-                            renderWall(DIRECTION_EAST, current->tileType);
-                        renderRoof(current->tileType);
+                            renderWall(DIRECTION_EAST, current->getTileType() );
+                        renderRoof( current->getTileType() );
                     }
                 }
                 glTranslatef(1,0,0);

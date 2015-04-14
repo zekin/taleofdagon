@@ -4,7 +4,6 @@
 
 int main(int argc, char **argv) {
     CGame game;
-
     /* check for additional arguments */
     if (argc>1) {
         if (argc==2 && strcmp(argv[1],"map")==0) {
