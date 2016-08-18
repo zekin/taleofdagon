@@ -208,7 +208,12 @@ public:
         init();
     }
 
-
+    virtual float getX() {
+        return x;
+    }
+    virtual float getY() {
+        return y;
+    }
     virtual void render(float pos_x, float pos_y, float pos_frac_x, float pos_frac_y, int render_tiles_view) {
         float offset_x=x-pos_x+pos_frac_x+render_tiles_view;
         float offset_y=pos_y-y+pos_frac_y+render_tiles_view;

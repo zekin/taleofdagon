@@ -246,6 +246,15 @@ public:
                 if (game_camera_on) {
                     Event ev=Event(EVENT_CAMERA_TARGET,(long)&GameCamera);
                     WorldMap.notify(&ev);
+
+                    CPlayerRenderable* player = CPlayerRenderable::getInstance();
+
+                    float playerX = player->getX();
+                    float playerY = player->getY();
+
+                    GameCamera.x = playerX;
+                    GameCamera.y = playerY;
+
                     CEventManager::getInstance()->notify(Event(EVENT_CAMERA_TARGET,(long)&GameCamera));
                     CEventManager::getInstance()->notify(Event(EVENT_ADD_CONSOLE,"Switching to Free Camera mode"));
                 }
