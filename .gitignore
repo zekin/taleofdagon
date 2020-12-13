@@ -7,3 +7,6 @@ cmake_install.cmake
 Makefile
 taleofdagon
 WorldMap_Uncompressed.bmp
+.cache
+.vscode
+compile_commands.json

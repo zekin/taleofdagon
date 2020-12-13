@@ -1,11 +1,16 @@
 #ifndef ENUM_H
 #define ENUM_H
+
+#include "Enum/constants.h"
 #include <iostream>
 #include <string>
 #include "math.h"
 #include "zekin/noise.h"
 #include <SDL/SDL.h>
 #include "logging.h"
+#include <iostream>
+#include <vector>
+
 #ifdef _MSC_VER
 #include <float.h>  // for _isnan() on VC++
 #define isnan(x) _isnan(x)  // VC++ uses _isnan() instead of isnan()
@@ -17,6 +22,16 @@ struct XY {
     double y;
     XY() : x(0), y(0) {}
     XY(double x,double y) : x(x), y(y) {}
+    int dir() {
+        if (x >= abs(y)) return DIRECTION_EAST;
+        else if (-y >= abs(x)) return DIRECTION_NORTH;
+        else if (-x >= abs(y)) return DIRECTION_WEST;
+        else if (y >= abs(x)) return DIRECTION_SOUTH;
+        else {
+            ERROR(LOG) << "Direction at " << x << "," << y << "doesn't meet any criteria";
+            return -1;
+        }
+    }
 };
 struct XYZ {
     double x;
@@ -33,210 +48,6 @@ struct Rect {
        bl,
        br;
     Rect(XY tl, XY tr, XY bl, XY br) : tl(tl), tr(tr), bl(bl), br(br) { }
-};
-enum {
-    DIRECTION_NORTH=0,
-    DIRECTION_EAST=1,
-    DIRECTION_SOUTH=2,
-    DIRECTION_WEST=3
-};
-enum {
-    MUSIC_INTRO=1000,
-    MUSIC_TOWN,
-    MUSIC_WANDERING,
-    MUSIC_DESERT,
-    MUSIC_FOREST,
-    MUSIC_COMBAT1,
-    MUSIC_COMBAT2,
-    MUSIC_COMBAT3,
-    MUSIC_FINALBATTLE,
-    MUSIC_CREDITS
-};
-enum {
-    SOUND_UI_CLICK=1,
-    SOUND_UI_SELECT=2
-};
-
-enum {
-    EVENT_GAME_STARTED=11000,
-    EVENT_GAME_ENDED,
-    EVENT_BUTTON_CLICKED,
-    EVENT_RENDER_FRAME,
-    EVENT_KEYPRESS_DOWN,
-    EVENT_KEYPRESS_UP,
-    EVENT_SWITCH_STATES,
-    EVENT_PLAY_MUSIC,
-    EVENT_PLAY_SOUND,
-    EVENT_CAMERA_TARGET,
-    EVENT_CAMERA_MOVE_START,
-    EVENT_CAMERA_MOVE_END,
-    EVENT_COMMAND_USE_START,
-    EVENT_COMMAND_USE_END,
-    EVENT_COMMAND_CANCEL,
-    EVENT_COMMAND_MAP,
-    EVENT_COMMAND_CHARACTER_SCREEN,
-    EVENT_ADD_CONSOLE,
-    EVENT_SET_SPEED,
-    EVENT_WINDOW_BUTTON_CLICKED,
-    EVENT_BUTTON_PRESSED_DOWN,
-    EVENT_BUTTON_PRESSED_RELEASE,
-    EVENT_BUTTON_SELECTED,
-    EVENT_COMBAT_STARTED,
-    EVENT_COMBAT_ENDED,
-    EVENT_UNIT_CREATED,
-    EVENT_UNIT_ATTACKS_DIRECTION,  //Unit Pointer, AttackNumber {1,2,3,4}, Direction
-    EVENT_UNIT_USES_DIRECTION,     //Unit Pointer, Item Pointer, Direction
-    EVENT_UNIT_USES_ON_SELF,       //Unit Pointer, Item Pointer
-    EVENT_UNIT_CASTS_DIRECTION,    //Unit Pointer, Spell, Direction
-    EVENT_UNIT_CASTS_ON_SELF,      //Unit Pointer, Spell
-    EVENT_UNIT_HIT_UNIT_WITH,      //
-    EVENT_PROJECTILE_HITS_UNIT,    //
-    EVENT_UNIT_LEVELS_UP,         //Skill UP
-    EVENT_BUTTON_INCREASE_SKILL, //skill number
-    EVENT_BUTTON_INCREASE_STAT,  //stat number
-    EVENT_BUTTON_DECREASE_SKILL, //skill number
-    EVENT_BUTTON_DECREASE_STAT,   //stat number
-    EVENT_INITIALIZE,
-    EVENT_CLEANUP,
-    EVENT_SPAWN_DIALOG  //DIALOG_NUMBER
-
-};
-
-
-enum {
-    STATE_INTRO=1,
-    STATE_MENU,
-    STATE_CHARACTER_SELECT,
-    STATE_GAME
-};
-enum CLASSIFIER {
-    SEA,
-    GROUND,
-    CLIFF
-};
-
-enum {
-    SKILL_AXES,
-    SKILL_DODGE,
-    SKILL_HEALTH,
-    SKILL_HIDE,
-    SKILL_MACES,
-    SKILL_MAGERY,
-    SKILL_MEDITATE,
-    SKILL_SWORDS
-};
-enum {
-    STAT_STR,
-    STAT_DEX,
-    STAT_INT
-};
-enum RESOURCE_TYPE {
-    RESOURCE_SPRITESHEET,
-    RESOURCE_MAPSHEET,
-    RESOURCE_MUSIC,
-    RESOURCE_SOUND
-};
-
-enum {
-    PORTRAIT_DAGON,
-    PORTRAIT_WHISKERS,
-    PORTRAIT_TOWN_FEMALE1,
-    PORTRAIT_TOWN_FEMALE2,
-    PORTRAIT_TOWN_MALE1,
-    PORTRAIT_TOWN_MALE2,
-    PORTRAIT_TOWN_SHOPKEEPER1,
-    PORTRAIT_TOWN_SHOPKEEPER2,
-};
-enum {
-    DIALOG_1_START_DAGON,
-    DIALOG_2_START_WHISKERS,
-    DIALOG_3_START_DAGON,
-    DIALOG_4_START_WHISKERS,
-    DIALOG_5_START_DAGON,
-    /* planned to have a lot more dialogue in the game, based on events triggering such as a unit death for the first time
-     * or numerous other occassions
-     */
-    DIALOG_6_END_DAGON,
-    DIALOG_7_END_KILLER,
-    DIALOG_8_END_CAT,
-    DIALOG_9_END_DAGON,
-    DIALOG_10_END_CAT,
-    DIALOG_11_END_KILLER
-};
-static char* dialogue[] = {
-    "~6Dagon looks down at his starving cat. ~0\"Whiskers! What are you doing over there? We have work to do.\"",
-    "~0\"Mrrrowl!\"",
-    "~0\"We have to work together! We need to find fire! Big swords, things that go boom! Your claws! ANYTHING to get this guy!\" ~6Dagon flails his arms excitedly and makes explosion sounds. ",
-    "~0\"Mrrrrrooowll..?\" ~6The cat looks up at Dagon pleadingly.",
-    "~0\"Oh okay fine, I guess we can try to find a meal too. We can try that city Valleyholme just north of here.\""
-};
-
-enum {
-    TEMP_COLD,
-    TEMP_WARM,
-    TEMP_HOT
-};
-enum {
-    ELEVATION_SEA,
-    ELEVATION_ABOVE_SEA,
-    ELEVATION_LAND,
-    ELEVATION_HIGH_MOUNTAIN
-};
-
-enum {
-//  TILE_GROUND_START=0,
-    TILE_BEACH_SAND=0,
-    TILE_GRASS,
-    TILE_MOUNTAIN,
-    TILE_SAND=3,
-    TILE_CRACKED_GROUND,
-    TILE_RIGID_MOUNTAIN,
-    TILE_CRACKED_ICE=6,
-    TILE_SNOW,
-    TILE_ICE_MOUNTAIN,
-    TILE_FROZEN_WATER=9,
-    TILE_WATER,
-    TILE_CITY_GROUND=15,
-    TILE_CITY_WALL,
-    TILE_CITY_FOOTHOLD,
-    TILE_CITY_HOUSE_WALL=18,
-    TILE_CITY_HOUSE_WINDOW,
-    TILE_CITY_HOUSE_WALL2,
-    TILE_CITY_HOUSE_WALL3=21,
-    TILE_CITY_HOUSE_FLOOR,
-    TILE_CITY_CONCRETE,
-    TILE_CITY_STONE_WALL=24,
-    TILE_CITY_MARBLE_FLOOR,
-    TILE_CITY_HOUSE_WOOD,
-    TILE_CITY_HOUSE_WOOD2=27
-
-};
-
-enum {
-    MAP_OBJECT_CACTUS_S=0,
-    MAP_OBJECT_CACTUS_L=1,
-    MAP_OBJECT_ROCK=2,
-    MAP_OBJECT_TABLE=3,
-    MAP_OBJECT_EVERGREEN_L=4,
-    MAP_OBJECT_EVERGREEN_S=5,
-    MAP_OBJECT_TREE=6
-};
-enum {
-    UNIT_TYPE_VILLAGER=100,
-    UNIT_TYPE_FIGHTER,
-    UNIT_TYPE_KNIGHT
-};
-
-enum {
-    PRECIPITATION_DRY,
-    PRECIPITATION_WET
-};
-enum {
-    AREA_GRASSLANDS,
-    AREA_FOREST,
-    AREA_DESERT,
-    AREA_SNOWLANDS,
-    AREA_CITY
 };
 
 struct TileInstantiation {
@@ -549,9 +360,17 @@ TileInstantiation getTileAt(float width, float height, float x, float y) {
 
     /* now check for hardcoded static objects */ //Building the first town (Valleyholme?)
     fillRectWith(&tile_being_built,TILE_CITY_GROUND,AREA_CITY,596,1414,710,1533,x,y);
+
     buildTownWalls(&tile_being_built,TILE_CITY_WALL,596,1414,710,1533,x,y);
     fillRectWith(&tile_being_built,TILE_CITY_STONE_WALL,AREA_CITY,594,1470,712,1472,x,y);
-    buildHouse(&tile_being_built,600,1430,610,1440,x,y);   
+    fillRectWith(&tile_being_built,TILE_CITY_STONE_WALL,AREA_CITY,620,1350,623,1535,x,y);
+    fillRectWith(&tile_being_built,TILE_CITY_STONE_WALL,AREA_CITY,655,1410,658,1535,x,y);
+
+
+    for (int i=0; i< 10; i++)
+        buildHouse(&tile_being_built,600+i*10,1430,600+i*10+8,1440,x,y);   
+
+
     if (tile_being_built.area_type==AREA_CITY && tile_being_built.tile_number != TILE_CITY_WALL) {
         double chance = (generateNoiseXY((int)x,(int)y)+1)/2.0;
         if (chance > 0.998) {
@@ -627,6 +446,8 @@ void generateWorldImage() {
                     tile.object_type==MAP_OBJECT_CACTUS_S) {
                 color=0x297060;
             }
+
+
 
             ((unsigned int*)surf->pixels)[i*2000+j]=color;
         }

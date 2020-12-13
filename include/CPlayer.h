@@ -42,9 +42,6 @@ private:
     Animation Attack[4];
     Animation Use[4];
 public:
-    CAnimation() {
-
-    }
     void setAnimation(int AnimationType, int Direction, std::vector<int> frame_order, float time) {
         switch(AnimationType) {
         case ANIM_IDLE:

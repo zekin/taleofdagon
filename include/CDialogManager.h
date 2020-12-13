@@ -1,6 +1,7 @@
 #ifndef CDIALOGMANAGER
 #define CDIALOGMANAGER
 #include "CGUI.h"
+#include <SDL/SDL_keysym.h>
 
 class CDialogue {
 private:
@@ -85,7 +86,7 @@ public:
         }
 
         if (e->type==EVENT_KEYPRESS_DOWN) {
-            if (e->a==SDLK_SPACE) {
+            if (e->a==SDLK_e) {
                 if (current_dialogue==0) {
                     return;
                 } else if (current_dialogue->next() == 0) {

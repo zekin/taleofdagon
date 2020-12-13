@@ -109,7 +109,7 @@ public:
                 this->setTarget(e->x,e->y,e->z);
                 this->setTarget(&camera_target_default);
             } else {
-                INFO(LOG) << "Recieved camera target at (" <<
+                INFO(LOG) << "Received camera target at (" <<
                           ((CRenderable*)e->a)->x << "," <<
                           ((CRenderable*)e->a)->y << "," <<
                           ((CRenderable*)e->a)->z << ")";

@@ -1,6 +1,8 @@
 #ifndef CSTATEINTRO_H
 #define CSTATEINTRO_H
 #include <SDL/SDL.h>
+#include <SDL/SDL_events.h>
+#include <SDL/SDL_keysym.h>
 
 #include "CEventManager.h"
 #include "enum.h"
@@ -63,15 +65,15 @@ public:
 
         //by decoupling the keypress down event from the actual enum "logic" of the event, we can make keybinds easier. theoretically, no time.
         if (e->type == EVENT_KEYPRESS_DOWN) {
-            if (e->a=='w')
+            if (e->a==SDLK_w)
                 CEventManager::getInstance()->notify(Event(EVENT_CAMERA_MOVE_START, DIRECTION_NORTH));
-            if (e->a=='s')
+            if (e->a==SDLK_s)
                 CEventManager::getInstance()->notify(Event(EVENT_CAMERA_MOVE_START, DIRECTION_SOUTH));
-            if (e->a==SDLK_SPACE)
+            if (e->a==SDLK_e)
                 CEventManager::getInstance()->notify(Event(EVENT_COMMAND_USE_START));
         }
         if (e->type == EVENT_KEYPRESS_UP) {
-            if (e->a==SDLK_SPACE)
+            if (e->a==SDLK_e)
                 CEventManager::getInstance()->notify(Event(EVENT_COMMAND_USE_END));
 //      if (e->a==SDLK_ESCAPE)
         }
@@ -100,15 +102,15 @@ public:
     virtual void notify(Event* e) {
         //by decoupling the keypress down event from the actual enum "logic" of the event, we can make keybinds easier. theoretically, no time.
         if (e->type == EVENT_KEYPRESS_DOWN) {
-            if (e->a=='w')
+            if (e->a==SDLK_w)
                 CEventManager::getInstance()->notify(Event(EVENT_CAMERA_MOVE_START, DIRECTION_NORTH));
-            if (e->a=='s')
+            if (e->a==SDLK_s)
                 CEventManager::getInstance()->notify(Event(EVENT_CAMERA_MOVE_START, DIRECTION_SOUTH));
-            if (e->a==SDLK_SPACE)
+            if (e->a==SDLK_e)
                 CEventManager::getInstance()->notify(Event(EVENT_COMMAND_USE_START));
         }
         if (e->type == EVENT_KEYPRESS_UP) {
-            if (e->a==SDLK_SPACE)
+            if (e->a==SDLK_e)
                 CEventManager::getInstance()->notify(Event(EVENT_COMMAND_USE_END));
             if (e->a==SDLK_ESCAPE)
                 CEventManager::getInstance()->notify(Event(EVENT_COMMAND_CANCEL));
@@ -135,6 +137,7 @@ public:
         }
     }
 };
+
 class CStateGame : public IState {
 private:
     bool enabled;
@@ -162,14 +165,15 @@ public:
             directions[i]=false;
     }
     void update() {
+
         if (directions[DIRECTION_NORTH])
-            GameCamera.y-=CClock::getInstance()->deltaT()*5.0;
+            GameCamera.y-=CClock::getInstance()->deltaT()*20.0;
         if (directions[DIRECTION_EAST])
-            GameCamera.x+=CClock::getInstance()->deltaT()*5.0;
+            GameCamera.x+=CClock::getInstance()->deltaT()*20.0;
         if (directions[DIRECTION_WEST])
-            GameCamera.x-=CClock::getInstance()->deltaT()*5.0;
+            GameCamera.x-=CClock::getInstance()->deltaT()*20.0;
         if (directions[DIRECTION_SOUTH])
-            GameCamera.y+=CClock::getInstance()->deltaT()*5.0;
+            GameCamera.y+=CClock::getInstance()->deltaT()*20.0;
 
     }
     virtual void notify(Event* e) {
@@ -200,12 +204,15 @@ public:
             CEventManager::getInstance()->unsubscribe(0, CWorldMap::getInstance());
             break;
         case EVENT_KEYPRESS_DOWN:
+            if (e->a==SDLK_q)
+                SDL_Quit();
+
             if (e->a=='w') {
                 if (game_camera_on)
                     directions[DIRECTION_NORTH]=true;
                 else {
                     CPlayerRenderable::getInstance()->ai_state=AI_WALKING;
-                    CPlayerRenderable::getInstance()->direction=DIRECTION_NORTH;
+                    CPlayerRenderable::getInstance()->heading.y=-1.0;
                 }
             }
 //          CEventManager::getInstance()->notify(Event(EVENT_CAMERA_MOVE_START, DIRECTION_NORTH));
@@ -215,7 +222,7 @@ public:
                 }
                 else {
                     CPlayerRenderable::getInstance()->ai_state=AI_WALKING;
-                    CPlayerRenderable::getInstance()->direction=DIRECTION_SOUTH;
+                    CPlayerRenderable::getInstance()->heading.y=1.0;
                 }
             }
 
@@ -225,7 +232,8 @@ public:
                     directions[DIRECTION_WEST]=true;
                 } else {
                     CPlayerRenderable::getInstance()->ai_state=AI_WALKING;
-                    CPlayerRenderable::getInstance()->direction=DIRECTION_WEST;
+                    CPlayerRenderable::getInstance()->heading.x=-1.0;
+
                 }
             }
 //          CEventManager::getInstance()->notify(Event(EVENT_CAMERA_MOVE_START, DIRECTION_WEST));
@@ -234,7 +242,8 @@ public:
                     directions[DIRECTION_EAST]=true;
                 } else {
                     CPlayerRenderable::getInstance()->ai_state=AI_WALKING;
-                    CPlayerRenderable::getInstance()->direction=DIRECTION_EAST;
+                    CPlayerRenderable::getInstance()->heading.x=1.0;
+
                 }
             }
 
@@ -271,25 +280,26 @@ public:
             if (e->a=='w') {
                 directions[DIRECTION_NORTH]=false;
                 CPlayerRenderable::getInstance()->ai_state=AI_STAND_AROUND;
-                CPlayerRenderable::getInstance()->direction=DIRECTION_NORTH;
+                CPlayerRenderable::getInstance()->heading.y=0.0;
             }
 
             if (e->a=='s') {
                 directions[DIRECTION_SOUTH]=false;
                 CPlayerRenderable::getInstance()->ai_state=AI_STAND_AROUND;
-                CPlayerRenderable::getInstance()->direction=DIRECTION_SOUTH;
+                CPlayerRenderable::getInstance()->heading.y=0.0;
 
             }
             if (e->a=='a') {
                 directions[DIRECTION_WEST]=false;
                 CPlayerRenderable::getInstance()->ai_state=AI_STAND_AROUND;
-                CPlayerRenderable::getInstance()->direction=DIRECTION_WEST;
+                CPlayerRenderable::getInstance()->heading.x=0.0;
 
             }
             if (e->a=='d') {
                 directions[DIRECTION_EAST]=false;
                 CPlayerRenderable::getInstance()->ai_state=AI_STAND_AROUND;
-                CPlayerRenderable::getInstance()->direction=DIRECTION_EAST;
+                CPlayerRenderable::getInstance()->heading.x=0.0;
+
             }
             if (e->a=='z') {
                 directions[DIRECTION_EAST]=false;
