@@ -16,14 +16,14 @@
 //#define FILE (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
 // DEBUG < INFO < NOTICE < WARN < ERROR < CRIT < ALERT < FATAL = EMERG
-#define EMERG(__logstream)  __logstream << "[EMERG] "  //__logstream << log4cpp::Priority::EMERG << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - " 
-#define ALERT(__logstream)  __logstream << "[ALERT] "  //__logstream << log4cpp::Priority::ALERT << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - "
-#define CRIT(__logstream)   __logstream << "[CRIT] "  //__logstream << log4cpp::Priority::CRIT << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - "
-#define ERROR(__logstream)  __logstream << "[ERROR] "  //__logstream << log4cpp::Priority::ERROR << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - "
-#define WARN(__logstream)   __logstream << "[WARN] "  //__logstream << log4cpp::Priority::WARN << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - "
-#define NOTICE(__logstream) __logstream << "[NOTICE] "  //__logstream << log4cpp::Priority::NOTICE << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - "
-#define INFO(__logstream)  __logstream << "[INFO] "  //__logstream << log4cpp::Priority::INFO << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - "
-#define DEBUG(__logstream) __logstream << "[DEBUG] "  //__logstream << log4cpp::Priority::DEBUG << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - "
+#define EMERG(__logstream)  __logstream << std::endl << "[EMERG] "  //__logstream << log4cpp::Priority::EMERG << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - " 
+#define ALERT(__logstream)  __logstream << std::endl << "[ALERT] "  //__logstream << log4cpp::Priority::ALERT << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - "
+#define CRIT(__logstream)   __logstream << std::endl << "[CRIT] "  //__logstream << log4cpp::Priority::CRIT << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - "
+#define ERROR(__logstream)  __logstream << std::endl << "[ERROR] "  //__logstream << log4cpp::Priority::ERROR << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - "
+#define WARN(__logstream)   __logstream << std::endl << "[WARN] "  //__logstream << log4cpp::Priority::WARN << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - "
+#define NOTICE(__logstream) __logstream << std::endl << "[NOTICE] "  //__logstream << log4cpp::Priority::NOTICE << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - "
+#define INFO(__logstream)  __logstream << std::endl << "[INFO] "  //__logstream << log4cpp::Priority::INFO << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - "
+#define DEBUG(__logstream) __logstream << std::endl << "[DEBUG] "  //__logstream << log4cpp::Priority::DEBUG << "[" << FILE << ":" << __LINE__ << ":" << __FUNCTION__ << "] - "
 
 #define LOG std::cout
 //log4cpp::Category &LOG = log4cpp::Category::getRoot();

@@ -1,3 +1,4 @@
+#include <SDL/SDL_events.h>
 #ifndef CGAME_H
 #include <SDL/SDL.h>
 #include <SDL/SDL_opengl.h>
@@ -145,6 +146,7 @@ public:
             default:
                 break;
             }
+            SDL_Delay(1);
         }
         return 1;
     }
