@@ -4,7 +4,6 @@ find_package(OpenGL)
 find_package(SDL)
 find_package(SDL_mixer)
 find_package(SDL_image)
-find_package(Log4cpp)
 
 add_executable(taleofdagon src/main.cpp )
 install(TARGETS taleofdagon RUNTIME DESTINATION bin)

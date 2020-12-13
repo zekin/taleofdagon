@@ -52,12 +52,12 @@ public:
         screen(0),
         width(800),
         height(600) {
-        try {
+/*        try {
             log4cpp::PropertyConfigurator::configure("log4cpp_settings.properties");
         }
         catch (std::exception& e) {
             std::cout << "log4cpp exception: " << e.what();
-        }
+        }*/
     }
 
     void initialize(unsigned int fullscreen) {
