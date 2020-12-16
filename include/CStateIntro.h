@@ -5,6 +5,7 @@
 #include <SDL/SDL_keysym.h>
 
 #include "CEventManager.h"
+#include "CUnit.h"
 #include "enum.h"
 #include "CMap.h"
 #include "CGUI.h"
@@ -279,27 +280,26 @@ public:
         case EVENT_KEYPRESS_UP:
             if (e->a=='w') {
                 directions[DIRECTION_NORTH]=false;
-                CPlayerRenderable::getInstance()->ai_state=AI_STAND_AROUND;
                 CPlayerRenderable::getInstance()->heading.y=0.0;
             }
 
             if (e->a=='s') {
                 directions[DIRECTION_SOUTH]=false;
-                CPlayerRenderable::getInstance()->ai_state=AI_STAND_AROUND;
                 CPlayerRenderable::getInstance()->heading.y=0.0;
 
             }
             if (e->a=='a') {
                 directions[DIRECTION_WEST]=false;
-                CPlayerRenderable::getInstance()->ai_state=AI_STAND_AROUND;
                 CPlayerRenderable::getInstance()->heading.x=0.0;
 
             }
             if (e->a=='d') {
                 directions[DIRECTION_EAST]=false;
-                CPlayerRenderable::getInstance()->ai_state=AI_STAND_AROUND;
                 CPlayerRenderable::getInstance()->heading.x=0.0;
 
+            }
+            if (CPlayerRenderable::getInstance()->heading.x==0.0 && CPlayerRenderable::getInstance()->heading.y == 0.0) {
+                CPlayerRenderable::getInstance()->ai_state=AI_STAND_AROUND;
             }
             if (e->a=='z') {
                 directions[DIRECTION_EAST]=false;
