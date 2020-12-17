@@ -97,13 +97,13 @@ public:
        glBindTexture( GL_TEXTURE_2D, textureId );
        glBegin(GL_QUADS);
        glTexCoord2d(0.0,0.5);
-       glVertex3d(-0.5,-0.5,1.9);
+       glVertex3d(-0.5,-0.5,2.0);
        glTexCoord2d(0.0,0.0);
-       glVertex3d(-0.5,0.5,1.9);
+       glVertex3d(-0.5,0.5,2.0);
        glTexCoord2d(0.5,0.0);
-       glVertex3d(0.5,0.5,1.9);
+       glVertex3d(0.5,0.5,2.0);
        glTexCoord2d(0.5,0.5);
-       glVertex3d(0.5,-0.5,1.9);
+       glVertex3d(0.5,-0.5,2.0);
        glEnd();
        glDisable(GL_DEPTH_TEST);
        glEnable(GL_BLEND);

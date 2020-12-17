@@ -11,3 +11,5 @@ WorldMap_Uncompressed.bmp
 .cache
 .vscode
 compile_commands.json
+docs
+Doxyfile

@@ -17,23 +17,7 @@
 //  float regen;
 //  float spd;
 //
-//};
-enum {
-    ANIM_IDLE,
-    ANIM_WALK,
-    ANIM_ATTACK,
-    ANIM_CAST,
-    ANIM_USE
-};
-struct Animation {
-private:
-    float time;
-    std::vector<int> frame_numbers;
-public:
-    Animation() {}
-
-
-};
+//};;
 class CAnimationSheet : public CSpriteSheet {
 
 private:

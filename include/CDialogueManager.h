@@ -2,40 +2,9 @@
 #define CDIALOGMANAGER
 #include "CGUI.h"
 #include <SDL/SDL_keysym.h>
+#include "CDialogue.h"
 
-class CDialogue {
-private:
-    CDialogue* next_dialogue;
-    int next_dialogue_num;
-    int portrait_type;
-    char* lines;
-public:
-    CDialogue(int portrait, char* lines, int next_dialogue_number) :
-        portrait_type(portrait),
-        lines(lines),
-        next_dialogue(0),
-        next_dialogue_num(next_dialogue_number) {
-    }
-    void attach(CDialogue* next) {
-        next_dialogue=next;
-    }
-    int next_dialogue_number() {
-        return next_dialogue_num;
-    }
-    int portrait() {
-        return portrait_type;
-    }
-    char* line() {
-        return lines;
-    }
-    CDialogue* next() {
-        return next_dialogue;
-    }
-    virtual void execute() {
-
-    };
-};
-class CDialogManager : public IEventable {
+class CDialogueManager : public IEventable {
 private:
     std::vector<CDialogue*> dialogues;
     CDialogue* current_dialogue;
@@ -56,7 +25,7 @@ public:
             }
         }
     }
-    CDialogManager() :
+    CDialogueManager() :
         current_dialogue(0),
         dialogue_box(-0.10,0.6,1.2,0.4,"./graphics/ui/ui_dialogue_box.png"),
         portrait_dagon(0.0,0.7,0.2,0.2,"./graphics/portrait/dagon.png"),

@@ -7,6 +7,7 @@
 #include "CMap.h"
 //#include "CGameRules.h"
 
+#include "constants.h"
 #include <SDL/SDL_opengl.h>
 #include <SDL/SDL.h>
 #include <sstream>
@@ -14,11 +15,6 @@
 #include "logging.h"
 
 
-enum UI_TYPE {
-    UI_TYPE_LABEL,
-    UI_TYPE_BUTTON,
-    UI_TYPE_TEXT
-};
 class IWidget : public IEventable {
 protected:
     IWidget* parent;

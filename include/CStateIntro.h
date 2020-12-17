@@ -10,7 +10,8 @@
 #include "CMap.h"
 #include "CGUI.h"
 #include "CRenderable.h"
-#include "CDialogManager.h"
+#include "CDialogueManager.h"
+#include "CWorldMap.h"
 
 class IState : public IEventable {
 private:
@@ -146,7 +147,7 @@ private:
 //  CMap WorldMap;
     CRenderable GameCamera;
     bool directions[4];
-    CDialogManager DialogManager;
+    CDialogueManager DialogManager;
     CGameConsole console;
     bool world_map_on;
 

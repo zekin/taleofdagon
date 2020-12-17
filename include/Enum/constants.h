@@ -91,6 +91,19 @@ enum {
     SKILL_MEDITATE,
     SKILL_SWORDS
 };
+enum UI_TYPE {
+    UI_TYPE_LABEL,
+    UI_TYPE_BUTTON,
+    UI_TYPE_TEXT
+};
+enum {
+    ANIM_IDLE,
+    ANIM_WALK,
+    ANIM_ATTACK,
+    ANIM_CAST,
+    ANIM_USE
+};
+
 enum {
     STAT_STR,
     STAT_DEX,
@@ -203,6 +216,28 @@ enum {
     AREA_DESERT,
     AREA_SNOWLANDS,
     AREA_CITY
+};
+
+enum {
+    SKIN_WHITE,
+    SKIN_BLACK,
+    SKIN_YELLOW,
+    SKIN_RED,
+    SKIN_BROWN
+};
+
+enum {
+    AI_PLAYER,
+    AI_STAND_AROUND,
+    AI_WALKING,
+    AI_ATTACK
+};
+
+enum {
+    ARMOR_CLOTHES,
+    ARMOR_SCALEMAIL,
+    ARMOR_CHAINMAIL,
+    ARMOR_PLATEMAIL
 };
 
 #endif
