@@ -406,6 +406,8 @@ public:
         player=renderable;
     }
     virtual void render() {
+//        IMapGenerator* mapGenerator = CLocator::getMapGenerator();
+
         const float size=0.0050;
         static char location[32]= {0};
 

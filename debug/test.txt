@@ -1,0 +1,5 @@
+// check joplin for more info
+LoadMap test.map
+StartPlayer 10,10
+StateChange game
+SpawnUnit Knight 15,10

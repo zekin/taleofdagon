@@ -8,14 +8,16 @@
 #include "zekin/noise.h"
 #include <string>
 using namespace Globals;
+
 class CMapGenerator : public IMapGenerator {
 protected:
     int width;
     int height;
-
 public:
     CMapGenerator() : width(1), height(1) {}
     /* */
+    virtual int getWidth() { return width; }
+    virtual int getHeight() { return height; }
     virtual TileInstantiation getTileAt(float x, float y) { return TileInstantiation(0,0,0);}
     virtual void generateWorldImage() {
         SDL_Surface * surf = SDL_CreateRGBSurface(0,width,height,32,0xFF,0xFF00,0xFF0000,0);
