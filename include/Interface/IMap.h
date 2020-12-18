@@ -10,6 +10,7 @@
 #include "ITileFactory.h"
 #include "CLocator.h"
 #include "CTile.h"
+#include "IMapGenerator.h"
 
 class CUnit;
 
@@ -90,6 +91,7 @@ public:
     virtual void setTiles(int x, int y) {
         IUnitFactory* unitGenerator = CLocator::getUnitFactory();
         ITileFactory* tileGenerator = CLocator::getTileFactory();
+        IMapGenerator* mapGenerator = CLocator::getMapGenerator();
         
         /* a create chunk function */
         int offsetx=x%Globals::chunk_size;
@@ -97,7 +99,7 @@ public:
         
         for ( int i = y - offsety; i < y - offsety + Globals::chunk_size; i++ ) {
             for ( int j = x - offsetx; j < x - offsetx + Globals::chunk_size; j++ ) {
-                TileInstantiation tile_properties=Globals::getTileAt(2000,2000,j,i);
+                TileInstantiation tile_properties=mapGenerator->getTileAt(j,i);
                 
                 if ( tile_properties.unit_type ) {
                     CRenderable* unit = NULL;

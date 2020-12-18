@@ -8,10 +8,12 @@ class IUnitFactory;
 class ITileFactory;
 class IMap;
 class IRenderer;
+class IMapGenerator;
 
 static IUnitFactory* g_unitFactory=0;
 static ITileFactory* g_tileFactory=0;
 static IMap* g_map=0;
+static IMapGenerator* g_mapGenerator=0;
 static IRenderer* g_renderer=0;
 
 class CLocator {
@@ -48,6 +50,31 @@ public:
         
         return g_tileFactory;
     }
+
+    static void setMapGenerator(IMapGenerator* mapGenerator) {
+        if ( !mapGenerator ) {
+            INFO(LOG) << "Map generator is set to null";
+            return;
+        }
+
+        if ( mapGenerator ) {
+            WARN(LOG) << "Map generator is already set - setting to a different value - is this intentional?";
+        }
+
+        INFO(LOG) << "Setting map generator to " << mapGenerator;
+        
+        g_mapGenerator = mapGenerator;
+    }
+    
+    static IMapGenerator* getMapGenerator() {
+        if ( g_mapGenerator == NULL ) {
+            ERROR(LOG) << "Map generator is not set";
+            return NULL;
+        }
+        
+        return g_mapGenerator;
+    }
+
 
     static void setTileFactory(ITileFactory* factory) {
         if ( !factory ) {

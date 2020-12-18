@@ -12,6 +12,7 @@
 #include "CUnitFactory.h"
 #include "CTileFactory.h"
 #include "CRenderer.h"
+#include "CMapGenerator.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,8 +27,11 @@ private:
     CCamera* camera;
     CClock* clock;
 
+
 private:
-    bool full_screen_enabled;
+    bool full_screen_enabled,
+         debug;
+
     int width;
     int height;
 
@@ -37,7 +41,7 @@ private: /* Services */
     CTileFactory* tileFactory;
 
 private: /* Helper methods */
-    void initializeServiceLocator() {
+    void initializeServiceLocator(char* path) {
         unitFactory = new CUnitFactory();
         tileFactory = new CTileFactory();
         renderer = new CRenderer();
@@ -45,12 +49,17 @@ private: /* Helper methods */
         CLocator::setUnitFactory( (IUnitFactory*) unitFactory );
         CLocator::setTileFactory( (ITileFactory*) tileFactory );
         CLocator::setRenderer( (IRenderer*) renderer );       
+        if (debug) 
+            CLocator::setMapGenerator( (IMapGenerator*) new CDebugMapGenerator(path) );
+        else
+            CLocator::setMapGenerator( (IMapGenerator*) new CWorldMapGenerator() );
     }
 
 public:
     CGame() :
         em(0),
         screen(0),
+        debug(0),
         width(800),
         height(600) {
 /*        try {
@@ -61,15 +70,18 @@ public:
         }*/
     }
 
-    void initialize(unsigned int fullscreen) {
+    void initialize(unsigned int flags) {
+        initialize(flags, NULL);
+    }
+    void initialize(unsigned int flags, char* path) {
         INFO(LOG) << "====STARTING GAME====";
-        full_screen_enabled = (fullscreen != 0);
+        debug = (flags & GAMEFLAGS_DEBUG) != 0;
+        full_screen_enabled = (flags & GAMEFLAGS_FULLSCREEN) != 0;
         SDL_Init(SDL_INIT_EVERYTHING);
         const SDL_VideoInfo* screen_information=SDL_GetVideoInfo();
-        if (screen_information != 0 && fullscreen==SDL_FULLSCREEN) {
+        if (screen_information != 0 && full_screen_enabled) {
             width=screen_information->current_w;
             height=screen_information->current_h;
-
             INFO(LOG) << "Width " << width << ", Height" << height;
         } else {
             INFO(LOG) << "Could not find screen resolution, defaulting to 800x600";
@@ -79,7 +91,7 @@ public:
         cam=CCamera::getInstance();
         SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL,1);
 
-        if (fullscreen==SDL_FULLSCREEN) {
+        if (full_screen_enabled) {
             screen=SDL_SetVideoMode(width,height,32,SDL_OPENGL|SDL_GL_DOUBLEBUFFER|SDL_FULLSCREEN);
         } else {
             screen=SDL_SetVideoMode(width,height,32,SDL_OPENGL|SDL_GL_DOUBLEBUFFER|SDL_RESIZABLE);
@@ -100,7 +112,7 @@ public:
         glMatrixMode(GL_MODELVIEW);
         SDL_WM_SetCaption("Tale of Dagon", 0);
 
-        initializeServiceLocator();
+        initializeServiceLocator(path);
         sound_manager = new CSoundSystem();
         engine = new CEngine();
         camera=CCamera::getInstance();

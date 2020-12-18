@@ -14,16 +14,8 @@
 - Move static data into files
 
 ## Cleanup and maintenance:
-- Assets to fix build
-    - done
-- Graphic placeholders
-    - was only needed if I didn't find the assets, so done
 - Figure out why my stack is overflowing
     - not figured out but fixed at least, related to assets
-- Figure out why map generation is generating nothing but green land
-    - this was fixed
-- Figure out why the hell the license I copied and pasted from that royalty free music site's new-lines aren't rendering properly in markdown? I guess I need to figure out how markdown works.
-    - Guide here: https://www.markdownguide.org/basic-syntax/
 
 
 ## Music used for assets
