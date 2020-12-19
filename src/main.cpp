@@ -19,10 +19,8 @@ int main(int argc, char **argv) {
         if (argc==2 && strcmp(argv[1],"fullscreen")==0)
             game.initialize(GAMEFLAGS_FULLSCREEN);
         else if (argc==3 && strcmp(argv[1],"debug")==0) {
-
-            CGameDebug debugGame(argv[2]);
-
             game.initialize(GAMEFLAGS_DEBUG, argv[2]);
+            CGameDebug debugGame(argv[2]);
         }
         else if (argc==4 && strcmp(argv[1],"map")==0 && strcmp(argv[2],"debug")==0) {
             CDebugMapGenerator mapGenerator(argv[3]);

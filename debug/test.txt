@@ -1,5 +1,10 @@
 // check joplin for more info
 LoadMap test.map
-StartPlayer 10,10
+StartPlayer 15,15
 StateChange game
-SpawnUnit Knight 15,10
+SpawnUnit Knight 8,8
+SpawnUnit Knight 8,9
+SpawnUnit Villager 8,10
+SpawnUnit Villager 8,11
+SpawnUnit Fighter 8,12
+SpawnUnit Fighter 8,13

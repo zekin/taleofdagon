@@ -11,6 +11,7 @@
 #include "CLocator.h"
 #include "CTile.h"
 #include "IMapGenerator.h"
+#include "constants.h"
 
 class CUnit;
 
@@ -104,17 +105,7 @@ public:
                 if ( tile_properties.unit_type ) {
                     CRenderable* unit = NULL;
                     /* cheap way of instantiating units for now, i think we should sent off a CREATE_UNIT message and register them with the unit manager */
-                    switch (tile_properties.unit_type) {
-                    case UNIT_TYPE_VILLAGER:
-                        unit = unitGenerator->createUnit(IUnitFactory::UNIT_VILLAGER,j,i);
-                        break;
-                    case UNIT_TYPE_KNIGHT:
-                        unit = unitGenerator->createUnit(IUnitFactory::UNIT_KNIGHT,j,i);
-                        break;
-                    case UNIT_TYPE_FIGHTER:
-                        unit = unitGenerator->createUnit(IUnitFactory::UNIT_FIGHTER,j,i);
-                        break;
-                    }
+                    unit = unitGenerator->createUnit(tile_properties.unit_type,j,i);
                 }
                 
                 if ( tile_properties.object_type ) {

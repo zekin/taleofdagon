@@ -22,13 +22,13 @@ public:
         IUnit* createdUnit=NULL;
 
         switch(unitType) {
-        case UNIT_FIGHTER:
+        case UNIT_TYPE_FIGHTER:
             createdUnit = (IUnit*)new CUnitFighter(x,y,0);
             break;
-        case UNIT_KNIGHT:
+        case UNIT_TYPE_KNIGHT:
             createdUnit = (IUnit*)new CUnitKnight(x,y,0);
             break;
-        case UNIT_VILLAGER:
+        case UNIT_TYPE_VILLAGER:
             createdUnit = (IUnit*)new CUnitVillager(x,y,0);
             break;
         default:

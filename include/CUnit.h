@@ -288,7 +288,7 @@ public:
         switch ( ability ) {
             case ABILITY_SPAWN_DEBUG:
                 if ( map->collide(NULL, spawnLocationX, spawnLocationY) == false ) {
-                    factory->createUnit(IUnitFactory::UNIT_FIGHTER, spawnLocationX, spawnLocationY);
+                    factory->createUnit(UNIT_TYPE_FIGHTER, spawnLocationX, spawnLocationY);
                 }
                 
                 ai_state=AI_STAND_AROUND;
