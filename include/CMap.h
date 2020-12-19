@@ -13,6 +13,7 @@
 #include <SDL/SDL_image.h>
 #include "logging.h"
 #include "IMap.h"
+#include "CChunk.h"
 
 class CMap : public IMap {
 protected:

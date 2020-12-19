@@ -79,6 +79,11 @@ public:
         }
         desiredMoveX = this->x + clock->deltaT() * speed * heading.x;
         desiredMoveY = this->y + clock->deltaT() * speed * heading.y;
+        /*
+        DEBUG(LOG) << "x:" << this->x << " y:" << this->y <<
+            " dmX:" << desiredMoveX << " dmY:" << desiredMoveY <<
+            "s:" << speed << "h.x" << heading.x << " h.y:" << heading.y;
+        */
 
         if (map->collide(this, round(desiredMoveX),round(desiredMoveY)) == false) {
             this->x = desiredMoveX;
@@ -91,8 +96,8 @@ public:
             return;
         } else {
             if (ai_state==AI_WALKING) {
-                heading.x=1.0/(4 - (rand() % 9));
-                heading.y=1.0/(4 - (rand() % 9));
+                heading.x=(((float)(rand()%5)) / (4.0f))*2.0 - 1.0; //1.0/(4 - (rand() % 9));
+                heading.y=(((float)(rand()%5)) / (4.0f))*2.0 - 1.0;//1.0/(4 - (rand() % 9));
                 current_animation=walk[heading.dir()];
             }
             if (ai_state==AI_STAND_AROUND) {
@@ -171,6 +176,7 @@ public:
     virtual void render(float pos_x, float pos_y, float pos_frac_x, float pos_frac_y, int render_tiles_view) {
         float offset_x=x-pos_x+pos_frac_x+render_tiles_view;
         float offset_y=pos_y-y+pos_frac_y+render_tiles_view;
+
         glEnable(GL_DEPTH_TEST);
         glPushMatrix();
         glTranslatef(offset_x,offset_y,0);

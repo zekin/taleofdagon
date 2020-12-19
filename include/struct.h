@@ -4,8 +4,16 @@
 #include <string>
 #include <vector>
 #include "constants.h"
+#include "logging.h"
 
 static unsigned int global_id=1000;
+
+struct WallInformation {
+    float height;
+    int tile_type;
+    WallInformation(float height, int tile_type) {}
+};
+
 
 struct Event {
     Event() : type(0), a(0), b(0), c(0), x(0.0), y(0.0), z(0.0) {}
@@ -25,10 +33,10 @@ struct XY {
     XY() : x(0), y(0) {}
     XY(double x,double y) : x(x), y(y) {}
     int dir() {
-        if (x >= abs(y)) return DIRECTION_EAST;
-        else if (-y >= abs(x)) return DIRECTION_NORTH;
-        else if (-x >= abs(y)) return DIRECTION_WEST;
-        else if (y >= abs(x)) return DIRECTION_SOUTH;
+        if (x >= std::abs(y)) return DIRECTION_EAST;
+        else if (-y >= std::abs(x)) return DIRECTION_NORTH;
+        else if (-x >= std::abs(y)) return DIRECTION_WEST;
+        else if (y >= std::abs(x)) return DIRECTION_SOUTH;
         else {
             ERROR(LOG) << "Direction at " << x << "," << y << "doesn't meet any criteria";
             return -1;
