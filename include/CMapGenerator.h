@@ -6,7 +6,10 @@
 #include "IMapGenerator.h"
 #include "struct.h"
 #include "zekin/noise.h"
+#include <cstdlib>
+#include <fstream>
 #include <string>
+
 using namespace Globals;
 
 class CMapGenerator : public IMapGenerator {
@@ -225,15 +228,104 @@ public:
     }
 };
 
+
+struct MapHeader {
+    unsigned short width;
+    unsigned short height;
+    unsigned short totalUnits;
+    MapHeader(unsigned short w,unsigned short h,unsigned short totalU) :
+    width(w),
+    height(h),
+    totalUnits(totalU) {}
+}; 
+
+struct MapFileTile {
+    unsigned char tileNumber;
+    unsigned char areaNumber;
+    unsigned char objectNumber;
+    MapFileTile(unsigned char tile,unsigned char area,unsigned char object) :
+    tileNumber(tile), 
+    areaNumber(area), 
+    objectNumber(object) {}
+};
+
+struct MapFileUnit {
+    unsigned char unitType;
+    unsigned short x;
+    unsigned short y;
+    MapFileUnit(unsigned char type, unsigned short x, unsigned short y) :
+    unitType(unitType),
+    x(x),
+    y(y) {}
+};
+
 class CDebugMapGenerator : public CMapGenerator {
 private:
     std::string path;
+    MapHeader fileHeader(char* bytes) {
+        MapHeader header(0,0,0);
+        header.width = *bytes;
+        header.height = *bytes+2;
+        header.totalUnits = *bytes+4;
+        return header;
+    }
+    
+    MapFileTile fileMapTile(char* bytes) {
+        MapFileTile tile(0,0,0);
+        tile.tileNumber = *bytes;
+        tile.areaNumber = *bytes+1;
+        tile.objectNumber = *bytes+2;
+        return tile;
+    }
+    
+    MapFileUnit fileUnit(char* bytes) {
+        MapFileUnit unit(0,0,0);
+        unit.unitType = *bytes;
+        unit.x = *bytes+1;
+        unit.y = *bytes+3;
+        return unit;
+    }
+
+    int initializeTileData() {
+        const int filetileBytes=3;
+        const int fileheaderBytes=6;
+        const int fileunitBytes=5;
+
+        INFO(LOG) << "Attempting to load path " << path;
+        std::fstream file("./debug/maps/"+path, std::ios_base::in | std::ios_base::binary);
+        char* beginning; 
+        char* buffer;
+
+         if (!file.is_open()) {
+            ERROR(LOG) << "Failed to open file!";
+            return false;
+        }
+   
+        buffer = (char*)calloc(1,fileheaderBytes);
+        file.read((char*)&buffer,fileheaderBytes);
+        MapHeader filemapheader = fileHeader(buffer);
+        width = filemapheader.width;
+        height = filemapheader.height;
+
+        MapFileTile* filemaptiles = (MapFileTile*)calloc(width, sizeof(MapFileTile));
+        free(buffer);
+       
+
+        beginning = (char*)calloc(width, tileBytes); 
+        for (buffer=beginning; buffer <= beginning+width*tileBytes; buffer+=tileBytes) {
+            MapTile fileMapTile(buffer);
+        }
+        INFO(LOG) << "Got back " << width << " " << height;
+        INFO(LOG) << "at " << file.tellg();
+        return true;
+    }
 public:
    CDebugMapGenerator(std::string path) {
       this->path = path; 
       DEBUG(LOG) << "In debug mode, grabbing path " << path;
       width=100;
       height=100;
+      initializeTileData();
    } 
    virtual TileInstantiation getTileAt(float x, float y) {
 //        int elevation=Globals::getTileHeight(2000,2000,x,y);

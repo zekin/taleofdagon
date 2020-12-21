@@ -6,7 +6,8 @@ while true; do
 	then
 		rm /tmp/tod-reload;
 		echo "Got start-signal, starting..."
-		./taleofdagon debug test.txt
+#		./taleofdagon debug test.txt
+		./taleofdagon map debug test.map
 	elif [ -f /tmp/tod-stop ];
 	then
 		rm /tmp/tod-stop;
