@@ -311,9 +311,9 @@ private:
         free(buffer);
        
 
-        beginning = (char*)calloc(width, tileBytes); 
-        for (buffer=beginning; buffer <= beginning+width*tileBytes; buffer+=tileBytes) {
-            MapTile fileMapTile(buffer);
+        beginning = (char*)calloc(width, filetileBytes); 
+        for (buffer=beginning; buffer <= beginning+width*filetileBytes; buffer+=filetileBytes) {
+            MapFileTile fileMapTile(buffer);
         }
         INFO(LOG) << "Got back " << width << " " << height;
         INFO(LOG) << "at " << file.tellg();
