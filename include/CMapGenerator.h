@@ -313,7 +313,7 @@ private:
 
         beginning = (char*)calloc(width, filetileBytes); 
         for (buffer=beginning; buffer <= beginning+width*filetileBytes; buffer+=filetileBytes) {
-            MapFileTile fileMapTile(buffer);
+//            MapFileTile fileMapTile(buffer);
         }
         INFO(LOG) << "Got back " << width << " " << height;
         INFO(LOG) << "at " << file.tellg();
